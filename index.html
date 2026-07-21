@@ -77,6 +77,8 @@
         .jenis-iklan-box {background:rgba(54,203,203,0.05); padding:14px; border-radius:10px; margin-bottom:16px; border-left:4px solid var(--sekunder);}
         .jenis-iklan-box h4 {margin-bottom:8px; color:var(--sekunder); font-size:14px;}
         .jenis-iklan-box p {font-size:13px; line-height:1.5;}
+        .bagian-lengkap {margin-top:16px; padding-top:16px; border-top:1px solid var(--batas);}
+        .bagian-lengkap h4 {font-size:15px; color:var(--utama); margin-bottom:12px; display:flex; align-items:center; gap:6px;}
         @media (max-width:768px) {
             body {padding:12px;}
             .header h1 {font-size:22px;}
@@ -89,7 +91,7 @@
 
 <div class="header">
     <h1><i class="fa fa-line-chart"></i> AdsPro Bisnis & Panduan Iklan</h1>
-    <p>Pantau Data, Hitung Laba, Bandingkan Kompetitor, & Dapatkan Panduan Set Iklan Terbaik</p>
+    <p>Pantau Data, Hitung Laba, Bandingkan Kompetitor, & Dapatkan Panduan Set Iklan Terlengkap</p>
 </div>
 
 <div class="nav">
@@ -146,7 +148,7 @@
                     <option value="Meta Manual">Meta (FB/IG) - Manual / Ads Manager</option>
                     <option value="TikTok Manual">TikTok - Manual / Business Center</option>
                     <option value="TikTok GMV">TikTok - GMV Max (Otomatis)</option>
-                    <option value="Shopee ROAS Manual">Shopee - ROAS Manual / Iklan Kata Kunci</option>
+                    <option value="Shopee ROAS Manual">Shopee - ROAS Manual / Iklan Pencarian</option>
                     <option value="Shopee ROAS Otomatis">Shopee - ROAS Otomatis</option>
                     <option value="Shopee GMV">Shopee - GMV Max</option>
                     <option value="Tokopedia">Tokopedia - Semua Jenis</option>
@@ -201,18 +203,18 @@
         </div>
         <div class="keterangan-kalkulator">
             <strong>Keterangan:</strong><br>
-            • Laba bersih = Harga Jual - (Modal + Biaya Iklan + Biaya Admin)<br>
+            • Laba bersih = Harga Jual - (Modal + Biaya Iklan + Biaya Admin + Pajak)<br>
             • Angka negatif berarti produk mengalami kerugian
         </div>
     </div>
 </div>
 
-<!-- PERKIRAAN SET IKLAN (DIPERBAIKI SESUAI JENIS) -->
+<!-- PERKIRAAN SET IKLAN (DILENGKAPI SEPENUHNYA) -->
 <div id="tab-setiklan" class="konten">
     <div class="form-boks">
-        <h3><i class="fa fa-sliders"></i> Masukkan Data Sesuai Jenis Iklan</h3>
+        <h3><i class="fa fa-sliders"></i> Perkiraan & Pengaturan Iklan Lengkap</h3>
         <div class="info-box">
-            <i class="fa fa-info-circle"></i> <strong>Penting:</strong> Pilih jenis iklan yang kamu pakai, karena rumus dan cara kerjanya berbeda antara Manual, GMV Max, dan ROAS Otomatis.
+            <i class="fa fa-info-circle"></i> <strong>Semua Data Diperlukan:</strong> Masukkan target omset, biaya modal, pajak, dan biaya platform agar hitungan sesuai kondisi bisnismu dan tidak merugi.
         </div>
 
         <div class="baris">
@@ -236,28 +238,67 @@
 
         <div id="keterangan-jenis" class="jenis-iklan-box" style="display:none;"></div>
 
-        <div class="baris">
-            <div class="grup"><label>Harga Jual Produk (Rp)</label><input type="number" id="set-harga" min="0"></div>
-            <div class="grup"><label>Anggaran Harian (Rp)</label><input type="number" id="set-anggaran" min="0" value="50000"></div>
-        </div>
-        <div class="baris">
-            <div class="grup"><label>Target ROAS / Rasio (Khusus Mode Otomatis)</label><input type="number" id="target-roas-set" min="1" value="3" step="0.1"></div>
-            <div class="grup"><label>Kategori Produk</label>
-                <select id="kategori">
-                    <option value="umum">Produk Umum</option>
-                    <option value="fashion">Fashion & Aksesoris</option>
-                    <option value="kecantikan">Kecantikan & Perawatan</option>
-                    <option value="elektronik">Elektronik & Gadget</option>
-                    <option value="makanan">Makanan & Minuman</option>
-                    <option value="rumah">Perlengkapan Rumah</option>
-                </select>
+        <!-- BAGIAN DATA PRODUK & TARGET -->
+        <div class="bagian-lengkap">
+            <h4><i class="fa fa-bullseye"></i> Target & Data Produk</h4>
+            <div class="baris">
+                <div class="grup">
+                    <label>🎯 Target Omset Harian (Rp)</label>
+                    <input type="number" id="target-omset" min="0" placeholder="Misal: 1.000.000">
+                </div>
+                <div class="grup">
+                    <label>Harga Jual Satuan Produk (Rp)</label>
+                    <input type="number" id="set-harga" min="0" placeholder="Contoh: 100000">
+                </div>
+            </div>
+            <div class="baris">
+                <div class="grup">
+                    <label>Modal Pokok / HPP Satuan (Rp)</label>
+                    <input type="number" id="set-hpp" min="0" placeholder="Contoh: 50000">
+                </div>
+                <div class="grup">
+                    <label>Anggaran Biaya Iklan Harian (Rp)</label>
+                    <input type="number" id="set-anggaran" min="0" value="50000">
+                </div>
             </div>
         </div>
 
-        <button class="btn btn-utama" onclick="hitungSetIklan()"><i class="fa fa-calculator"></i> Hitung & Dapatkan Panduan</button>
+        <!-- BAGIAN BIAYA LAINNYA -->
+        <div class="bagian-lengkap">
+            <h4><i class="fa fa-money"></i> Biaya Platform & Pajak</h4>
+            <div class="baris">
+                <div class="grup">
+                    <label>Biaya Komisi & Admin Platform (%)</label>
+                    <input type="number" id="biaya-komisi" min="0" max="30" value="6" step="0.1" placeholder="Biasanya 3-10%">
+                </div>
+                <div class="grup">
+                    <label>Pajak Penjualan / PPN (%)</label>
+                    <input type="number" id="pajak" min="0" max="20" value="11" step="0.1" placeholder="PPN Indonesia 11%">
+                </div>
+            </div>
+            <div class="baris">
+                <div class="grup">
+                    <label>Target ROAS Minimum / Rasio</label>
+                    <input type="number" id="target-roas-set" min="1" value="3" step="0.1">
+                </div>
+                <div class="grup">
+                    <label>Kategori Produk</label>
+                    <select id="kategori">
+                        <option value="umum">Produk Umum</option>
+                        <option value="fashion">Fashion & Aksesoris</option>
+                        <option value="kecantikan">Kecantikan & Perawatan</option>
+                        <option value="elektronik">Elektronik & Gadget</option>
+                        <option value="makanan">Makanan & Minuman</option>
+                        <option value="rumah">Perlengkapan Rumah</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-utama" onclick="hitungSetIklan()"><i class="fa fa-calculator"></i> Hitung Semua & Dapatkan Panduan Lengkap</button>
 
         <div id="hasil-set-iklan" class="hasil-set" style="display:none; margin-top:20px;">
-            <h4 style="margin-bottom:12px; color:var(--utama);">📋 HASIL PERKIRAAN & PANDUAN</h4>
+            <h4 style="margin-bottom:12px; color:var(--utama);">📋 HASIL PERHITUNGAN & PANDUAN PENGATURAN</h4>
             <div id="isi-hasil-set"></div>
         </div>
     </div>
@@ -301,7 +342,7 @@
     <div class="form-boks">
         <h3><i class="fa fa-balance-scale"></i> Hasil Perbandingan</h3>
         <div id="daftar-kompetitor" class="daftar-kompetitor">
-            <p style="text-align:center; color:var(--abu); padding:20px;">Belum ada data kompetitor.</p>
+            <p style="text-align:center; color:var(--abu); padding:20px;">Belum ada data.</p>
         </div>
     </div>
 </div>
@@ -357,11 +398,11 @@ document.getElementById('set-jenis').addEventListener('change', function(){
     const kotak = document.getElementById('keterangan-jenis');
     let isi = '';
     if(jenis === 'manual'){
-        isi = `<h4>🔧 MODE MANUAL</h4><p>Kamu yang mengatur harga tawar per klik. Biaya iklan dikendalikan langsung oleh kamu. Cocok untuk pemula yang ingin menghemat anggaran.</p>`;
+        isi = `<h4>🔧 MODE MANUAL</h4><p>Kamu yang mengatur harga tawar per klik. Biaya iklan dikendalikan langsung oleh kamu. Cocok untuk pemula yang ingin menghemat anggaran dan kendali penuh.</p>`;
     } else if(jenis === 'gmv'){
-        isi = `<h4>📈 MODE GMV MAX</h4><p>Sistem akan menghabiskan anggaran kamu sebanyak mungkin untuk mendapatkan omset terbesar. <strong>Tidak menjamin laba</strong>, hanya fokus memperbanyak penjualan.</p>`;
+        isi = `<h4>📈 MODE GMV MAX</h4><p>Sistem akan menghabiskan anggaran kamu sebanyak mungkin untuk mendapatkan omset terbesar. <strong>Tidak menjamin laba</strong>, hanya fokus memperbanyak penjualan secepat mungkin.</p>`;
     } else if(jenis === 'roas-auto'){
-        isi = `<h4>⚖️ MODE ROAS OTOMATIS</h4><p>Kamu hanya menentukan target rasio ROAS (misal 3x). Sistem akan mengatur tawaran sendiri agar biaya iklan sesuai target tersebut.</p>`;
+        isi = `<h4>⚖️ MODE ROAS OTOMATIS</h4><p>Kamu hanya menentukan target rasio ROAS. Sistem akan mengatur tawaran sendiri agar biaya iklan sesuai target tersebut, sehingga laba lebih terkontrol.</p>`;
     }
     kotak.innerHTML = isi;
     kotak.style.display = isi ? 'block' : 'none';
@@ -415,60 +456,129 @@ function simpanKompetitor(){
     muatDaftarKompetitor();
 }
 
-// PERHITUNGAN DIPERBAIKI SESUAI JENIS IKLAN
+// PERHITUNGAN LENGKAP DENGAN SEMUA BIAYA
 function hitungSetIklan(){
     const plat = document.getElementById('set-platform').value;
     const jenis = document.getElementById('set-jenis').value;
+    const targetOmset = Number(document.getElementById('target-omset').value)||0;
     const harga = Number(document.getElementById('set-harga').value)||0;
+    const hpp = Number(document.getElementById('set-hpp').value)||0;
     const anggaran = Number(document.getElementById('set-anggaran').value)||50000;
+    const komisi = Number(document.getElementById('biaya-komisi').value)||0;
+    const pajak = Number(document.getElementById('pajak').value)||0;
     const targetRoas = Number(document.getElementById('target-roas-set').value)||3;
 
-    if(!plat || !jenis || !harga) {alert('Lengkapi platform, jenis iklan, dan harga produk ya!'); return;}
+    if(!plat || !jenis || !harga || !hpp) {alert('Lengkapi platform, jenis iklan, harga jual, dan HPP produk ya!'); return;}
 
-    // Parameter pasar disesuaikan jenis
-    let hasil, panduan;
+    // Hitung semua biaya dasar
+    const biayaKomisiSatuan = harga * (komisi / 100);
+    const biayaPajakSatuan = harga * (pajak / 100);
+    const totalBiayaNonIklan = hpp + biayaKomisiSatuan + biayaPajakSatuan;
+    const marginKotor = harga - totalBiayaNonIklan;
+    const biayaIklanMaksPerProduk = Math.round(marginKotor / targetRoas);
+    const pesananTarget = targetOmset > 0 ? Math.ceil(targetOmset / harga) : 0;
+    const anggaranDibutuhkanTarget = pesananTarget * biayaIklanMaksPerProduk;
+
+    // Parameter pasar sesuai platform & jenis
+    const paramPasar = {
+        TikTok: {cpcMin:900, cpcMax:2500, konversi:3.8, cpm:8500},
+        Shopee: {cpcMin:1000, cpcMax:3000, konversi:4.2, cpm:9500},
+        Meta: {cpcMin:1600, cpcMax:4500, konversi:2.5, cpm:12000},
+        Tokopedia: {cpcMin:1200, cpcMax:3500, konversi:3.5, cpm:10500}
+    }[plat];
+
+    let hasil = '', panduan = '', catatanPenting = '';
+
     if(jenis === 'manual'){
-        const param = {
-            TikTok: {cpcMin:900, cpcMax:2500, konversi:3.8},
-            Shopee: {cpcMin:1000, cpcMax:3000, konversi:4.2},
-            Meta: {cpcMin:1600, cpcMax:4500, konversi:2.5},
-            Tokopedia: {cpcMin:1200, cpcMax:3500, konversi:3.5}
-        }[plat];
-        const cpcRata = Math.round((param.cpcMin+param.cpcMax)/2);
-        const klik = Math.floor(anggaran/cpcRata);
-        const pesanan = Math.round(klik*(param.konversi/100));
-        const omset = pesanan*harga;
+        const cpcRata = Math.round((paramPasar.cpcMin + paramPasar.cpcMax) / 2);
+        const estimasiKlik = Math.floor(anggaran / cpcRata);
+        const estimasiPesanan = Math.round(estimasiKlik * (paramPasar.konversi / 100));
+        const estimasiOmset = estimasiPesanan * harga;
+        const estimasiLaba = estimasiPesanan * (marginKotor - cpcRata);
+
         hasil = `
-            <div class="sukses-box">Mode Manual: Anggaran Rp ${anggaran.toLocaleString()} → ${klik.toLocaleString()} klik, ${pesanan} pesanan, omset Rp ${omset.toLocaleString()}</div>
-            <div class="item-hasil"><span>Saran CPC Maksimal</span><span>Rp ${param.cpcMax.toLocaleString()}</span></div>
+            <div class="sukses-box"><strong>📊 PERHITUNGAN DASAR</strong><br>
+            Margin kotor per produk: Rp ${marginKotor.toLocaleString()}<br>
+            Biaya iklan aman maksimal: Rp ${biayaIklanMaksPerProduk.toLocaleString()} / produk</div>
+
+            <div class="item-hasil"><span>Target Pesanan (jika ada target omset)</span><span>${pesananTarget} unit</span></div>
+            <div class="item-hasil"><span>Anggaran dibutuhkan untuk target</span><span>Rp ${anggaranDibutuhkanTarget.toLocaleString()}</span></div>
+            <div class="item-hasil"><span>Estimasi klik dengan anggaran saat ini</span><span>${estimasiKlik.toLocaleString()} kali</span></div>
+            <div class="item-hasil"><span>Estimasi pesanan didapat</span><span>${estimasiPesanan} unit</span></div>
+            <div class="item-hasil"><span>Estimasi omset didapat</span><span>Rp ${estimasiOmset.toLocaleString()}</span></div>
+            <div class="item-hasil"><span>Estimasi laba bersih</span><span>Rp ${estimasiLaba.toLocaleString()}</span></div>
+            <div class="item-hasil"><span>Rentang CPC yang disarankan</span><span>Rp ${paramPasar.cpcMin.toLocaleString()} – Rp ${Math.min(paramPasar.cpcMax, biayaIklanMaksPerProduk).toLocaleString()}</span></div>
         `;
-        panduan = `Gunakan tawaran manual sesuai rentang di atas. Pantau hasil 3 hari, turunkan CPC jika konversi kurang bagus.`;
+
+        panduan = `
+            <strong>Pengaturan Utama:</strong><br>
+            • Atur tawaran CPC maksimal tidak boleh lebih dari Rp ${biayaIklanMaksPerProduk.toLocaleString()} agar tidak merugi<br>
+            • Mulai dari harga rata-rata Rp ${cpcRata.toLocaleString()}, naikkan sedikit jika pesanan kurang masuk<br>
+            • Pilih tujuan kampanye "Konversi" atau "Pesanan" sesuai platform<br>
+            • Gunakan audiens yang pernah berinteraksi dengan toko kamu terlebih dahulu
+        `;
     } 
     else if(jenis === 'gmv'){
-        const pesananMaksimal = Math.floor(anggaran / (harga*0.15)); // asumsi biaya iklan 15% dari harga
+        const pesananMaksimal = Math.floor(anggaran / totalBiayaNonIklan);
         const omsetMaksimal = pesananMaksimal * harga;
+        const estimasiLabaMinus = anggaran > (pesananMaksimal * marginKotor) ? 'BISA MERUGI' : 'Laba tergantung konversi';
+
         hasil = `
-            <div class="peringatan-box">⚠️ Mode GMV Max: Fokus omset maksimal, anggaran habis sepenuhnya</div>
-            <div class="item-hasil"><span>Perkiraan Pesanan Maksimal</span><span>${pesananMaksimal} unit</span></div>
-            <div class="item-hasil"><span>Perkiraan Omset Maksimal</span><span>Rp ${omsetMaksimal.toLocaleString()}</span></div>
+            <div class="peringatan-box"><strong>⚠️ PERINGATAN KHUSUS GMV MAX</strong><br>
+            Mode ini memprioritaskan omset sebesar-besarnya, bukan laba. Pastikan margin kamu cukup besar!</div>
+
+            <div class="item-hasil"><span>Margin kotor per produk</span><span>Rp ${marginKotor.toLocaleString()}</span></div>
+            <div class="item-hasil"><span>Estimasi pesanan maksimal</span><span>${pesananMaksimal} unit</span></div>
+            <div class="item-hasil"><span>Estimasi omset maksimal</span><span>Rp ${omsetMaksimal.toLocaleString()}</span></div>
+            <div class="item-hasil"><span>Risiko kerugian</span><span class="merah">${estimasiLabaMinus}</span></div>
         `;
-        panduan = `Pastikan margin laba kamu cukup besar (minimal 25-30%) karena sistem bisa menghabiskan anggaran untuk penjualan murah sekalipun.`;
+
+        panduan = `
+            <strong>Pengaturan Utama:</strong><br>
+            • Pastikan margin kotor minimal 30% dari harga jual sebelum menggunakan mode ini<br>
+            • Jangan gunakan jika produk kamu baru pertama kali dijual<br>
+            • Pantau setiap hari, jika biaya iklan melebihi 30% dari omset, segera kurangi anggaran
+        `;
     } 
     else if(jenis === 'roas-auto'){
-        const biayaMaksPerProduk = Math.round(harga / targetRoas);
-        const pesanan = Math.floor(anggaran / biayaMaksPerProduk);
-        const omset = pesanan * harga;
+        const pesananMaksimal = Math.floor(anggaran / biayaIklanMaksPerProduk);
+        const omsetDidapat = pesananMaksimal * harga;
+        const labaTerjamin = pesananMaksimal * (marginKotor - biayaIklanMaksPerProduk);
+
         hasil = `
-            <div class="sukses-box">Mode ROAS Otomatis Target ${targetRoas}x: Biaya iklan terkontrol</div>
-            <div class="item-hasil"><span>Biaya Iklan Maks per Produk</span><span>Rp ${biayaMaksPerProduk.toLocaleString()}</span></div>
-            <div class="item-hasil"><span>Perkiraan Pesanan</span><span>${pesanan} unit</span></div>
-            <div class="item-hasil"><span>Perkiraan Omset</span><span>Rp ${omset.toLocaleString()}</span></div>
+            <div class="sukses-box"><strong>✅ MODE ROAS OTOMATIS TERKONTROL</strong><br>
+            Sistem akan menjaga biaya iklan sesuai target ROAS yang kamu inginkan</div>
+
+            <div class="item-hasil"><span>Margin kotor per produk</span><span>Rp ${marginKotor.toLocaleString()}</span></div>
+            <div class="item-hasil"><span>Biaya iklan maksimal aman</span><span>Rp ${biayaIklanMaksPerProduk.toLocaleString()}</span></div>
+            <div class="item-hasil"><span>Target ROAS yang diatur</span><span>${targetRoas}x</span></div>
+            <div class="item-hasil"><span>Estimasi pesanan didapat</span><span>${pesananMaksimal} unit</span></div>
+            <div class="item-hasil"><span>Estimasi omset didapat</span><span>Rp ${omsetDidapat.toLocaleString()}</span></div>
+            <div class="item-hasil"><span>Estimasi laba terjamin</span><span>Rp ${labaTerjamin.toLocaleString()}</span></div>
         `;
-        panduan = `Tidak perlu atur tawaran manual. Jika ROAS aktual lebih tinggi dari target, kamu bisa naikkan target sedikit demi sedikit.`;
+
+        panduan = `
+            <strong>Pengaturan Utama:</strong><br>
+            • Isi target ROAS dengan angka ${targetRoas}x sesuai yang kamu masukkan di atas<br>
+            • Tidak perlu atur tawaran manual, biarkan sistem yang bekerja<br>
+            • Jika hasil ROAS aktual lebih tinggi dari target selama 3 hari berturut-turut, naikkan target ROAS sedikit demi sedikit<br>
+            • Jika pesanan berhenti masuk, turunkan target ROAS sebesar 0.2x - 0.3x saja
+        `;
     }
 
+    // Tambahan panduan umum
+    catatanPenting = `
+        <div class="keterangan-panduan" style="margin-top:16px;">
+            <strong>📝 CATATAN PENTING LAINNYA:</strong><br>
+            • Semua angka di atas adalah estimasi berdasarkan rata-rata pasar Indonesia<br>
+            • Hasil asli tergantung kualitas foto/video produk, deskripsi, dan harga dibanding kompetitor<br>
+            • Selalu sisakan anggaran untuk pengujian minimal 3 hari sebelum mengambil kesimpulan<br>
+            • Jika menggunakan diskon, pastikan menghitung ulang margin kotor setelah diskon
+        </div>
+    `;
+
     document.getElementById('hasil-set-iklan').style.display = 'block';
-    document.getElementById('isi-hasil-set').innerHTML = hasil + `<div class="keterangan-panduan" style="margin-top:12px;"><strong>💡 Saran Pengaturan:</strong> ${panduan}</div>`;
+    document.getElementById('isi-hasil-set').innerHTML = hasil + `<div class="keterangan-panduan" style="margin-top:12px;"><strong>💡 CARA MENGATUR DI PLATFORM:</strong><br>${panduan}</div>` + catatanPenting;
 }
 
 function muatRingkasan(){
@@ -538,7 +648,7 @@ function ekspor(){
     const blob = new Blob([csv], {type:'text/csv'});
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `Laporan_Iklan_${new Date().toLocaleDateString('id-ID')}.csv`;
+    a.download = `Laporan_Iklan_Lengkap_${new Date().toLocaleDateString('id-ID')}.csv`;
     a.click();
 }
 </script>
