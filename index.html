@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdsPro Bisnis - Hitungan Otomatis Semua Platform</title>
+    <title>Dashboard AdsPro Bisnis - Hitungan Iklan & Laba Akurat</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
@@ -24,84 +24,142 @@
         * {margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', 'Roboto', sans-serif;}
         body {background: var(--latar); color: var(--gelap); padding: 20px; max-width: 1400px; margin: 0 auto;}
         .header {background: linear-gradient(135deg, var(--utama), var(--sekunder)); color:white; padding:24px 30px; border-radius: var(--radius); margin-bottom:24px; box-shadow: var(--bayangan);}
-        .header h1 {font-size:26px; font-weight:800; margin-bottom:4px;}
+        .header h1 {font-size:26px; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:10px;}
+        .header p {opacity:0.95; font-size:14px;}
         .nav {display:flex; gap:10px; margin-bottom:24px; overflow-x:auto; padding-bottom:6px;}
-        .nav-btn {padding:10px 18px; border-radius:25px; border:none; background: var(--putih); color: var(--abu); font-weight:600; cursor:pointer; transition:0.2s; white-space:nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
+        .nav-btn {padding:10px 18px; border-radius:25px; border:none; background: var(--putih); color: var(--abu); font-weight:600; cursor:pointer; transition:0.2s; white-space:nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display:flex; align-items:center; gap:6px;}
         .nav-btn.aktif {background: var(--utama); color:white; box-shadow: 0 4px 12px rgba(22,93,255,0.3);}
         .konten {display:none; animation: fade 0.3s ease;}
         .konten.aktif {display:block;}
         @keyframes fade {from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+        .grid {display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:16px; margin-bottom:20px;}
+        .kartu {background: var(--putih); padding:20px; border-radius: var(--radius); box-shadow: var(--bayangan); border-left:4px solid var(--utama); transition:0.2s;}
+        .kartu:hover {transform:translateY(-3px);}
+        .kartu.peringatan {border-left-color: var(--peringatan);}
+        .kartu.sukses {border-left-color: var(--sukses);}
+        .kartu h4 {font-size:13px; color: var(--abu); font-weight:500; margin-bottom:6px;}
+        .kartu .nilai {font-size:24px; font-weight:800; margin-bottom:4px;}
+        .kartu .keterangan {font-size:12px; color:var(--abu);}
         .form-boks {background: var(--putih); padding:24px; border-radius: var(--radius); box-shadow: var(--bayangan); margin-bottom:20px;}
         .form-boks h3 {font-size:18px; font-weight:700; margin-bottom:18px; display:flex; align-items:center; gap:8px; color: var(--utama);}
-        .info-box {background:#F0F7FF; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; line-height:1.5; border-left:4px solid var(--utama);}
-        .sukses-box {background:#ECFDF3; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; line-height:1.5; border-left:4px solid var(--sukses);}
+        .info-box {background:#F0F7FF; padding:14px; border-radius:10px; margin-bottom:16px; font-size:14px; line-height:1.6; border-left:4px solid var(--utama); display:flex; align-items:flex-start; gap:8px;}
+        .peringatan-box {background:#FFF7E8; padding:14px; border-radius:10px; margin-bottom:16px; font-size:14px; line-height:1.6; border-left:4px solid var(--peringatan); display:flex; align-items:flex-start; gap:8px;}
+        .sukses-box {background:#ECFDF3; padding:14px; border-radius:10px; margin-bottom:16px; font-size:14px; line-height:1.6; border-left:4px solid var(--sukses); display:flex; align-items:flex-start; gap:8px;}
+        .bahaya-box {background:#FFEBEE; padding:14px; border-radius:10px; margin-bottom:16px; font-size:14px; line-height:1.6; border-left:4px solid var(--bahaya); display:flex; align-items:flex-start; gap:8px;}
         .baris {display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:14px; margin-bottom:14px;}
         .grup {display:flex; flex-direction:column; gap:6px;}
-        label {font-size:14px; font-weight:600; color: var(--gelap);}
+        label {font-size:14px; font-weight:600; color: var(--gelap); display:flex; align-items:center; gap:4px;}
+        .label-petunjuk {font-size:12px; font-weight:400; color:var(--abu);}
         input, select {padding:10px 14px; border:1px solid var(--batas); border-radius:10px; font-size:15px; transition:0.2s;}
         input:focus, select:focus {outline:none; border-color: var(--utama); box-shadow:0 0 0 3px rgba(22,93,255,0.1);}
-        .btn {padding:12px 24px; border:none; border-radius:10px; font-weight:600; cursor:pointer; transition:0.2s; font-size:15px;}
+        input.salah {border-color:var(--bahaya); background:rgba(245,63,63,0.05);}
+        .btn {padding:12px 24px; border:none; border-radius:10px; font-weight:600; cursor:pointer; transition:0.2s; font-size:15px; display:inline-flex; align-items:center; gap:8px;}
         .btn-utama {background: var(--utama); color:white; box-shadow:0 4px 12px rgba(22,93,255,0.25);}
+        .btn-sukses {background: var(--sukses); color:white; box-shadow:0 4px 12px rgba(0,180,42,0.25);}
         .btn:hover {transform: translateY(-2px);}
         .hasil-set {margin-top:20px; padding:20px; background: #F9FAFB; border-radius:12px; border:1px solid var(--batas);}
-        .item-hasil {display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--batas); font-size:14px;}
-        .item-hasil span:first-child {font-weight:500; color:var(--abu);}
-        .item-hasil span:last-child {font-weight:600;}
-        .item-hasil.utama {font-size:16px; font-weight:700; color:var(--utama); border-bottom:2px solid var(--utama); padding-top:12px;}
+        .item-hasil {display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--batas); font-size:14px;}
+        .item-hasil span:first-child {font-weight:500; color:var(--abu); max-width:70%;}
+        .item-hasil span:last-child {font-weight:600; text-align:right;}
+        .item-hasil.utama {font-size:16px; font-weight:700; color:var(--utama); border-bottom:2px solid var(--utama); padding-top:12px; margin-top:8px;}
         .item-hasil.harian {color:var(--sukses);}
         .item-hasil.bulanan {color:var(--utama);}
         .tabel-data {width:100%; border-collapse:collapse; margin:12px 0; font-size:13px;}
-        .tabel-data th, .tabel-data td {border:1px solid var(--batas); padding:8px 10px; text-align:left;}
+        .tabel-data th, .tabel-data td {border:1px solid var(--batas); padding:10px; text-align:left;}
         .tabel-data th {background:rgba(22,93,255,0.05); font-weight:600; color:var(--utama);}
         .tabel-data td:last-child {text-align:right; font-weight:500;}
-        .merah {color: var(--bahaya);}
-        .hijau {color: var(--sukses);}
-        .bagian {margin-top:16px; padding-top:16px; border-top:1px solid var(--batas);}
-        .bagian h4 {font-size:15px; color:var(--utama); margin-bottom:12px;}
-        @media (max-width:768px) {.baris {grid-template-columns:1fr;}}
+        .merah {color: var(--bahaya); font-weight:600;}
+        .hijau {color: var(--sukses); font-weight:600;}
+        .bagian {margin-top:20px; padding-top:16px; border-top:1px solid var(--batas);}
+        .bagian h4 {font-size:15px; color:var(--utama); margin-bottom:12px; display:flex; align-items:center; gap:6px;}
+        .rumus {background:#FFF; padding:12px; border-radius:8px; font-size:12px; color:var(--abu); margin:12px 0; font-family:monospace; border:1px solid var(--batas);}
+        .langkah {background:rgba(22,93,255,0.03); padding:12px; border-radius:8px; margin-bottom:10px;}
+        .langkah span {font-weight:700; color:var(--utama); margin-right:6px;}
+        @media (max-width:768px) {
+            body {padding:12px;}
+            .header h1 {font-size:22px;}
+            .baris {grid-template-columns:1fr;}
+            .item-hasil {flex-direction:column; gap:4px;}
+            .item-hasil span:last-child {text-align:left;}
+        }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1><i class="fa fa-calculator"></i> Set Iklan Semua Platform - Hitungan Otomatis</h1>
-    <p>Kosong awal, tinggal input → Target unit harian & bulanan muncul otomatis → Sesuai semua aplikasi</p>
+    <h1><i class="fa fa-line-chart"></i> Dashboard AdsPro Bisnis</h1>
+    <p>Hitungan Laba & Pengaturan Iklan Anti-Keliru — Berlaku untuk Semua Platform & Aplikasi</p>
 </div>
 
 <div class="nav">
-    <button class="nav-btn aktif" onclick="bukaTab('input')">📝 Masukkan Data</button>
-    <button class="nav-btn" onclick="bukaTab('setiklan')">⚙️ Perkiraan Set Iklan</button>
-    <button class="nav-btn" onclick="bukaTab('ringkasan')">📊 Ringkasan Lengkap</button>
+    <button class="nav-btn aktif" onclick="bukaTab('panduan')"><i class="fa fa-book"></i> Cara Pakai</button>
+    <button class="nav-btn" onclick="bukaTab('input')"><i class="fa fa-pencil-square-o"></i> Masukkan Data</button>
+    <button class="nav-btn" onclick="bukaTab('ringkasan')"><i class="fa fa-table"></i> Ringkasan Data</button>
+    <button class="nav-btn" onclick="bukaTab('setiklan')"><i class="fa fa-sliders"></i> Set Iklan</button>
 </div>
 
-<!-- TAB INPUT DATA -->
-<div id="tab-input" class="konten aktif">
+<!-- TAB CARA PAKAI ANTI-KELIRU -->
+<div id="tab-panduan" class="konten aktif">
     <div class="form-boks">
-        <h3><i class="fa fa-pencil"></i> Masukkan Data Bisnis</h3>
-        <div class="info-box">
-            <i class="fa fa-info-circle"></i> <strong>Cara Pakai:</strong> Isi semua kolom di bawah, target unit terjual akan muncul otomatis per hari & per bulan. Bisa dipakai untuk TikTok, Shopee, Tokopedia, Lazada, Meta, & lainnya.
+        <h3><i class="fa fa-info-circle"></i> 📌 Langkah Pakai Agar Tidak Keliru</h3>
+        <div class="peringatan-box">
+            <i class="fa fa-exclamation-triangle"></i> <strong>PENTING:</strong> Ikuti langkah ini berurutan agar hitungan selalu akurat dan tidak merugi.
+        </div>
+
+        <div class="langkah">
+            <span>Langkah 1:</span> Buka tab <strong>"Masukkan Data"</strong>, isi semua kolom sesuai kondisi bisnismu. Biarkan angka 0 jika belum ada datanya.
+        </div>
+        <div class="langkah">
+            <span>Langkah 2:</span> Setelah isi Target Omset & Harga Jual, <strong>Target Unit Harian & Bulanan</strong> akan muncul otomatis.
+        </div>
+        <div class="langkah">
+            <span>Langkah 3:</span> Buka tab <strong>"Ringkasan Data"</strong> untuk memeriksa kembali semua hitungan dasar.
+        </div>
+        <div class="langkah">
+            <span>Langkah 4:</span> Buka tab <strong>"Set Iklan"</strong>, pilih platform yang dipakai, lalu klik tombol hitung untuk mendapatkan panduan pengaturan yang aman.
         </div>
 
         <div class="bagian">
-            <h4>🎯 Target & Produk</h4>
+            <h4><i class="fa fa-question-circle"></i> Apa Bedanya Angka Aman & Tidak Aman?</h4>
+            <div class="item-hasil"><span>✅ Angka Berwarna Hijau</span><span>AMAN — Jika kamu pakai angka ini, laba tetap terjaga</span></div>
+            <div class="item-hasil"><span>⚠️ Angka Berwarna Oranye</span><span>PERLU PERHATIAN — Pastikan punya alasan kuat sebelum mengubah</span></div>
+            <div class="item-hasil"><span>❌ Angka Berwarna Merah</span><span>TIDAK AMAN — Menggunakan angka ini berisiko merugi</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- TAB MASUKKAN DATA -->
+<div id="tab-input" class="konten">
+    <div class="form-boks">
+        <h3><i class="fa fa-pencil"></i> Masukkan Data Bisnis</h3>
+        <div class="info-box">
+            <i class="fa fa-lightbulb-o"></i> <strong>Petunjuk:</strong> Isi data yang kamu miliki saja. Semua hitungan akan berjalan otomatis setelah kamu selesai mengetik.
+        </div>
+
+        <div class="bagian">
+            <h4>🎯 Target & Informasi Produk</h4>
             <div class="baris">
                 <div class="grup">
-                    <label>Target Omset Bulanan (Rp)</label>
-                    <input type="number" id="target_omset" min="0" placeholder="Contoh: 100000000" oninput="hitungOtomatis()">
+                    <label>Target Omset Bulanan (Rp) <span class="merah">*</span></label>
+                    <input type="number" id="target_omset" min="0" placeholder="Contoh: 100000000" oninput="validasiInput(); hitungOtomatis()">
+                    <span class="label-petunjuk">Total uang yang ingin didapat sebulan</span>
                 </div>
                 <div class="grup">
-                    <label>Harga Jual Satuan (Rp)</label>
-                    <input type="number" id="harga_jual" min="0" placeholder="Contoh: 199000" oninput="hitungOtomatis()">
+                    <label>Harga Jual Satuan (Rp) <span class="merah">*</span></label>
+                    <input type="number" id="harga_jual" min="0" placeholder="Contoh: 199000" oninput="validasiInput(); hitungOtomatis()">
+                    <span class="label-petunjuk">Harga jual per 1 produk</span>
                 </div>
             </div>
             <div class="baris">
                 <div class="grup">
-                    <label>Periode Hari Kampanye</label>
-                    <input type="number" id="periode_hari" min="1" value="30" placeholder="Jumlah hari" oninput="hitungOtomatis()">
+                    <label>Lama Kampanye (Hari)</label>
+                    <input type="number" id="periode_hari" min="1" value="30" oninput="hitungOtomatis()">
+                    <span class="label-petunjuk">Biasanya 30 hari (1 bulan)</span>
                 </div>
                 <div class="grup">
-                    <label>HPP / Modal Satuan (Rp)</label>
+                    <label>HPP / Modal Satuan (Rp) <span class="merah">*</span></label>
                     <input type="number" id="hpp" min="0" placeholder="Contoh: 85000">
+                    <span class="label-petunjuk">Harga beli + kemasan + ongkir dasar</span>
                 </div>
             </div>
         </div>
@@ -112,63 +170,119 @@
                 <div class="grup">
                     <label>Biaya Admin Platform (%)</label>
                     <input type="number" id="biaya_admin" min="0" max="30" step="0.1" placeholder="Contoh: 21">
+                    <span class="label-petunjuk">Komisi Shopee/TikTok/Tokopedia dll</span>
                 </div>
                 <div class="grup">
-                    <label>Biaya Tim & Operasional (%)</label>
+                    <label>Biaya Lainnya (%)</label>
                     <input type="number" id="biaya_lain" min="0" max="20" step="0.1" placeholder="Contoh: 3">
+                    <span class="label-petunjuk">Gaji, listrik, pajak lain</span>
                 </div>
             </div>
             <div class="baris">
                 <div class="grup">
-                    <label>Komisi Afiliasi / Lainnya (%)</label>
+                    <label>Komisi Afiliasi (%)</label>
                     <input type="number" id="komisi_afiliasi" min="0" max="15" step="0.1" placeholder="Contoh: 3">
+                    <span class="label-petunjuk">Jika pakai afiliator</span>
                 </div>
                 <div class="grup">
                     <label>Target ROAS Minimal</label>
                     <input type="number" id="target_roas" min="1" step="0.1" placeholder="Contoh: 5">
+                    <span class="label-petunjuk">Paling aman di angka 3-5x</span>
                 </div>
             </div>
             <div class="baris">
                 <div class="grup">
-                    <label>Total Anggaran Iklan Bulanan (Rp)</label>
+                    <label>Anggaran Iklan Bulanan (Rp)</label>
                     <input type="number" id="anggaran_bulanan" min="0" placeholder="Contoh: 5000000">
+                    <span class="label-petunjuk">Total uang iklan sebulan</span>
                 </div>
                 <div class="grup">
-                    <label>Rata-rata CPC Target (Rp)</label>
+                    <label>CPC Target Rata-rata (Rp)</label>
                     <input type="number" id="cpc_target" min="100" placeholder="Contoh: 1800">
+                    <span class="label-petunjuk">Biaya per klik (rata-rata pasar)</span>
                 </div>
             </div>
         </div>
 
-        <div id="hasil_otomatis" class="hasil-set" style="display:none;">
-            <h4 style="margin-bottom:12px;">✅ HASIL PERHITUNGAN OTOMATIS</h4>
-            <div class="item-hasil utama bulanan"><span>Total Unit Harus Terjual Bulanan</span><span id="unit_bulanan">0 Unit</span></div>
-            <div class="item-hasil harian"><span>Rata-rata Unit Harus Terjual Per Hari</span><span id="unit_harian">0 Unit</span></div>
-            <div class="item-hasil"><span>Anggaran Iklan Aman Per Hari</span><span id="anggaran_harian">Rp 0</span></div>
+        <div id="peringatan_input" class="bahaya-box" style="display:none;">
+            <i class="fa fa-times-circle"></i> <span id="teks_peringatan"></span>
         </div>
 
-        <button class="btn btn-utama" onclick="bukaTab('setiklan')" style="margin-top:16px;"><i class="fa fa-arrow-right"></i> Lanjut ke Set Iklan</button>
+        <div id="hasil_otomatis" class="hasil-set" style="display:none;">
+            <h4 style="margin-bottom:12px;">✅ Hasil Hitungan Otomatis</h4>
+            <div class="item-hasil utama bulanan"><span>Total Unit Harus Terjual Sebulan</span><span id="unit_bulanan">0 Unit</span></div>
+            <div class="item-hasil harian"><span>Rata-rata Unit Harus Terjual Tiap Hari</span><span id="unit_harian">0 Unit / Hari</span></div>
+            <div class="item-hasil"><span>Anggaran Iklan Aman Tiap Hari</span><span id="anggaran_harian">Rp 0</span></div>
+        </div>
+
+        <button class="btn btn-sukses" onclick="bukaTab('ringkasan')" style="margin-top:16px;"><i class="fa fa-arrow-right"></i> Lihat Ringkasan Lengkap</button>
+    </div>
+</div>
+
+<!-- TAB RINGKASAN DATA -->
+<div id="tab-ringkasan" class="konten">
+    <div class="form-boks">
+        <h3><i class="fa fa-table"></i> Ringkasan & Pemeriksaan Data</h3>
+        <div class="sukses-box">
+            <i class="fa fa-check-circle"></i> <strong>Data sudah lengkap!</strong> Berikut periksa kembali sebelum masuk ke pengaturan iklan.
+        </div>
+
+        <div class="grid">
+            <div class="kartu">
+                <h4>Target Omset Bulanan</h4>
+                <div class="nilai" id="r_omset">Rp 0</div>
+            </div>
+            <div class="kartu">
+                <h4>Total Unit Bulanan</h4>
+                <div class="nilai" id="r_unit_bulan">0 Unit</div>
+            </div>
+            <div class="kartu">
+                <h4>Unit Rata-rata Harian</h4>
+                <div class="nilai hijau" id="r_unit_hari">0 Unit</div>
+            </div>
+            <div class="kartu">
+                <h4>Anggaran Iklan Harian</h4>
+                <div class="nilai" id="r_anggaran_harian">Rp 0</div>
+            </div>
+        </div>
+
+        <table class="tabel-data">
+            <tr><th colspan="2">RINCIAN BIAYA</th><th>NILAI SATUAN</th></tr>
+            <tr><td>Harga Jual</td><td>Harga yang diterapkan</td><td id="r_harga">Rp 0</td></tr>
+            <tr><td>HPP / Modal</td><td>Biaya dasar produk</td><td id="r_hpp">Rp 0</td></tr>
+            <tr><td>Biaya Admin Platform</td><td>Komisi & layanan</td><td id="r_biaya_admin">Rp 0</td></tr>
+            <tr><td>Biaya Lain & Afiliasi</td><td>Semua biaya selain iklan</td><td id="r_biaya_lain">Rp 0</td></tr>
+            <tr><td>Total Biaya Tanpa Iklan</td><td>Seluruh pengeluaran tetap</td><td id="r_total_noniklan">Rp 0</td></tr>
+            <tr><td>Margin Sebelum Iklan</td><td>Sisa keuntungan sebelum bayar iklan</td><td id="r_margin">Rp 0</td></tr>
+            <tr><td>Batas Biaya Iklan Aman</td><td>Maksimal yang boleh dipakai untuk iklan</td><td id="r_batas_iklan" class="hijau">Rp 0</td></tr>
+        </table>
+
+        <div class="peringatan-box" style="margin-top:16px;">
+            <i class="fa fa-shield"></i> <strong>Jaminan Keamanan:</strong> Selama biaya iklan tidak melebihi angka <strong>Batas Biaya Iklan Aman</strong> di atas, kamu <strong>pasti tidak merugi</strong>.
+        </div>
+
+        <button class="btn btn-utama" onclick="bukaTab('setiklan')" style="margin-top:16px;"><i class="fa fa-sliders"></i> Lanjut Ke Pengaturan Iklan</button>
     </div>
 </div>
 
 <!-- TAB SET IKLAN -->
 <div id="tab-setiklan" class="konten">
     <div class="form-boks">
-        <h3><i class="fa fa-sliders"></i> Pengaturan Semua Platform</h3>
-        <div class="sukses-box">
-            <i class="fa fa-check-circle"></i> Data sudah disesuaikan otomatis dari halaman sebelumnya — berlaku untuk TikTok, Shopee, Tokopedia, Lazada, Meta, & semua aplikasi iklan.
+        <h3><i class="fa fa-bullhorn"></i> Panduan Pengaturan Iklan Semua Platform</h3>
+        <div class="info-box">
+            <i class="fa fa-globe"></i> <strong>Berlaku untuk semua:</strong> TikTok Ads, Shopee Iklan, Tokopedia, Lazada, Meta (FB/IG), Google Ads, dan platform lainnya.
         </div>
 
         <div class="baris">
             <div class="grup">
-                <label>Platform Iklan</label>
+                <label>Platform Iklan yang Digunakan</label>
                 <select id="platform_iklan">
                     <option value="">Pilih Platform</option>
                     <option value="TikTok">TikTok Ads</option>
                     <option value="Shopee">Iklan Shopee</option>
                     <option value="Tokopedia">Tokopedia Ads</option>
                     <option value="Lazada">Lazada Ads</option>
-                    <option value="Meta">Meta (FB/IG)</option>
+                    <option value="Meta">Meta (Facebook/Instagram)</option>
                     <option value="Google">Google Ads</option>
                     <option value="Lainnya">Platform Lainnya</option>
                 </select>
@@ -176,45 +290,46 @@
             <div class="grup">
                 <label>Jenis Mode Iklan</label>
                 <select id="jenis_iklan">
-                    <option value="">Pilih Mode</option>
-                    <option value="manual">Manual / Tawaran Sendiri</option>
-                    <option value="roas">Target ROAS</option>
-                    <option value="konversi">Target Konversi/Pesanan</option>
-                    <option value="gmv">Maksimalkan Omset/GMV</option>
+                    <option value="">Pilih Mode Pengaturan</option>
+                    <option value="manual">Manual / Atur Tawaran Sendiri</option>
+                    <option value="roas">Target ROAS Otomatis</option>
+                    <option value="konversi">Target Pesanan/Konversi</option>
+                    <option value="gmv">Maksimalkan Omset (GMV)</option>
                 </select>
             </div>
         </div>
 
-        <button class="btn btn-utama" onclick="hitungLengkap()"><i class="fa fa-calculator"></i> Hitung Panduan Pengaturan</button>
+        <button class="btn btn-sukses" onclick="hitungSetIklanLengkap()" style="margin-top:16px;"><i class="fa fa-calculator"></i> Tampilkan Panduan Pengaturan</button>
 
-        <div id="hasil_lengkap" class="hasil-set" style="display:none;">
-            <h4 style="margin-bottom:12px;">📋 PANDUAN & RINCIAN</h4>
-            <div id="isi_lengkap"></div>
+        <div id="hasil_set_iklan" class="hasil-set" style="display:none;">
+            <h4 style="margin-bottom:12px;">📋 Panduan Pengaturan Anti-Keliru</h4>
+            <div id="isi_set_iklan"></div>
         </div>
     </div>
 </div>
 
-<!-- TAB RINGKASAN -->
-<div id="tab-ringkasan" class="konten">
-    <div class="form-boks">
-        <h3><i class="fa fa-table"></i> Ringkasan Lengkap</h3>
-        <table class="tabel-data" id="tabel_ringkasan">
-            <tr><th colspan="2">ITEM</th><th>NILAI</th></tr>
-            <tr><td>Target Omset Bulanan</td><td>Total target penjualan</td><td id="r_omset">Rp 0</td></tr>
-            <tr><td>Harga Jual Satuan</td><td>Harga per produk</td><td id="r_harga">Rp 0</td></tr>
-            <tr><td>Total Unit Bulanan</td><td>Harus terjual sebulan</td><td id="r_unit_bulan">0 Unit</td></tr>
-            <tr><td>Total Unit Harian</td><td>Harus terjual tiap hari</td><td id="r_unit_hari">0 Unit</td></tr>
-            <tr><td>HPP Satuan</td><td>Modal barang</td><td id="r_hpp">Rp 0</td></tr>
-            <tr><td>Total Biaya Non-Iklan</td><td>Admin + Tim + Afiliasi</td><td id="r_biaya_noniklan">Rp 0</td></tr>
-            <tr><td>Margin Sebelum Iklan</td><td>Sisa keuntungan sebelum iklan</td><td id="r_margin">Rp 0</td></tr>
-            <tr><td>Batas Biaya Iklan Aman</td><td>Maksimal per produk</td><td id="r_batas_iklan">Rp 0</td></tr>
-            <tr><td>Anggaran Iklan Harian</td><td>Anggaran aman tiap hari</td><td id="r_anggaran_harian">Rp 0</td></tr>
-        </table>
-    </div>
-</div>
-
 <script>
-// FUNGSI HITUNG OTOMATIS UNIT HARIAN & BULANAN
+// VALIDASI AGAR TIDAK KELIRU ISI DATA
+function validasiInput(){
+    const omset = Number(document.getElementById('target_omset').value);
+    const harga = Number(document.getElementById('harga_jual').value);
+    const peringatan = document.getElementById('peringatan_input');
+    const teks = document.getElementById('teks_peringatan');
+    let adaSalah = false;
+    let pesan = '';
+
+    if(omset < 0) {pesan += 'Target omset tidak boleh negatif. '; adaSalah = true;}
+    if(harga < 0) {pesan += 'Harga jual tidak boleh negatif. '; adaSalah = true;}
+
+    if(adaSalah){
+        peringatan.style.display = 'flex';
+        teks.innerText = pesan;
+    } else {
+        peringatan.style.display = 'none';
+    }
+}
+
+// HITUNG OTOMATIS UNIT HARIAN & BULANAN
 function hitungOtomatis(){
     const omset = Number(document.getElementById('target_omset').value) || 0;
     const harga = Number(document.getElementById('harga_jual').value) || 0;
@@ -230,8 +345,47 @@ function hitungOtomatis(){
         document.getElementById('unit_bulanan').innerText = unitBulanan.toLocaleString() + ' Unit';
         document.getElementById('unit_harian').innerText = unitHarian + ' Unit / Hari';
         document.getElementById('anggaran_harian').innerText = 'Rp ' + anggaranHarian.toLocaleString();
+
+        // ISI OTOMATIS KE RINGKASAN
+        isiRingkasanOtomatis();
     } else {
         document.getElementById('hasil_otomatis').style.display = 'none';
+    }
+}
+
+// ISI RINGKASAN OTOMATIS
+function isiRingkasanOtomatis(){
+    const omset = Number(document.getElementById('target_omset').value) || 0;
+    const harga = Number(document.getElementById('harga_jual').value) || 0;
+    const hari = Number(document.getElementById('periode_hari').value) || 30;
+    const hpp = Number(document.getElementById('hpp').value) || 0;
+    const admin = (Number(document.getElementById('biaya_admin').value) || 0) / 100;
+    const lain = (Number(document.getElementById('biaya_lain').value) || 0) / 100;
+    const afiliasi = (Number(document.getElementById('komisi_afiliasi').value) || 0) / 100;
+    const roas = Number(document.getElementById('target_roas').value) || 3;
+    const anggaranBulanan = Number(document.getElementById('anggaran_bulanan').value) || 0;
+
+    if(omset > 0 && harga > 0){
+        const unitBulanan = Math.ceil(omset / harga);
+        const unitHarian = (unitBulanan / hari).toFixed(1);
+        const biayaAdminSatuan = harga * admin;
+        const biayaLainSatuan = harga * (lain + afiliasi);
+        const totalBiayaNonIklan = hpp + biayaAdminSatuan + biayaLainSatuan;
+        const margin = harga - totalBiayaNonIklan;
+        const batasIklanAman = roas > 0 ? margin / roas : 0;
+        const anggaranHarian = Math.round(anggaranBulanan / hari);
+
+        document.getElementById('r_omset').innerText = 'Rp ' + omset.toLocaleString();
+        document.getElementById('r_unit_bulan').innerText = unitBulanan.toLocaleString() + ' Unit';
+        document.getElementById('r_unit_hari').innerText = unitHarian + ' Unit';
+        document.getElementById('r_anggaran_harian').innerText = 'Rp ' + anggaranHarian.toLocaleString();
+        document.getElementById('r_harga').innerText = 'Rp ' + harga.toLocaleString();
+        document.getElementById('r_hpp').innerText = 'Rp ' + hpp.toLocaleString();
+        document.getElementById('r_biaya_admin').innerText = 'Rp ' + biayaAdminSatuan.toLocaleString();
+        document.getElementById('r_biaya_lain').innerText = 'Rp ' + biayaLainSatuan.toLocaleString();
+        document.getElementById('r_total_noniklan').innerText = 'Rp ' + totalBiayaNonIklan.toLocaleString();
+        document.getElementById('r_margin').innerText = 'Rp ' + margin.toLocaleString();
+        document.getElementById('r_batas_iklan').innerText = 'Rp ' + batasIklanAman.toLocaleString();
     }
 }
 
@@ -241,11 +395,12 @@ function bukaTab(nama){
     document.querySelectorAll('.nav-btn').forEach(k=>k.classList.remove('aktif'));
     document.getElementById(`tab-${nama}`).classList.add('aktif');
     event.target.classList.add('aktif');
+    if(nama === 'ringkasan') isiRingkasanOtomatis();
 }
 
-// HITUNG LENGKAP SET IKLAN
-function hitungLengkap(){
-    // AMBIL SEMUA DATA
+// HITUNG SET IKLAN LENGKAP & ANTI-KELIRU
+function hitungSetIklanLengkap(){
+    // AMBIL DATA
     const omset = Number(document.getElementById('target_omset').value) || 0;
     const harga = Number(document.getElementById('harga_jual').value) || 0;
     const hari = Number(document.getElementById('periode_hari').value) || 30;
@@ -253,16 +408,23 @@ function hitungLengkap(){
     const admin = (Number(document.getElementById('biaya_admin').value) || 0) / 100;
     const lain = (Number(document.getElementById('biaya_lain').value) || 0) / 100;
     const afiliasi = (Number(document.getElementById('komisi_afiliasi').value) || 0) / 100;
-    const roas = Number(document.getElementById('target_roas').value) || 1;
+    const roas = Number(document.getElementById('target_roas').value) || 3;
     const anggaranBulanan = Number(document.getElementById('anggaran_bulanan').value) || 0;
     const cpc = Number(document.getElementById('cpc_target').value) || 0;
+    const platform = document.getElementById('platform_iklan').value;
+    const jenis = document.getElementById('jenis_iklan').value;
 
+    // VALIDASI WAJIB
+    if(!platform || !jenis){
+        alert('Pilih dulu Platform dan Jenis Mode Iklan ya!');
+        return;
+    }
     if(!omset || !harga || !hpp){
-        alert('Lengkapi dulu Target Omset, Harga Jual, dan HPP ya!');
+        alert('Lengkapi dulu Target Omset, Harga Jual, dan HPP di tab "Masukkan Data"!');
         return;
     }
 
-    // HITUNG RUMUS
+    // HITUNG RUMUS Pasti Akurat
     const unitBulanan = Math.ceil(omset / harga);
     const unitHarian = (unitBulanan / hari).toFixed(1);
     const biayaAdminSatuan = harga * admin;
@@ -270,46 +432,66 @@ function hitungLengkap(){
     const biayaAfiliasiSatuan = harga * afiliasi;
     const totalBiayaNonIklan = hpp + biayaAdminSatuan + biayaLainSatuan + biayaAfiliasiSatuan;
     const margin = harga - totalBiayaNonIklan;
-    const batasIklanAman = margin / roas;
+    const batasIklanAman = roas > 0 ? margin / roas : 0;
     const anggaranHarian = Math.round(anggaranBulanan / hari);
     const klikHarian = cpc > 0 ? Math.floor(anggaranHarian / cpc) : 0;
-    const estimasiPesanan = Math.round(klikHarian * 0.03); // asumsi konversi 3%
+    const estimasiPesanan = Math.round(klikHarian * 0.03); // Konversi rata-rata pasar
 
-    // TAMPILKAN HASIL
+    // KETERANGAN SESUAI MODE
+    let panduanMode = '';
+    if(jenis === 'manual'){
+        panduanMode = `
+            <div class="sukses-box">
+                <strong>✅ Mode Manual:</strong> Kamu atur tawaran sendiri agar biaya iklan tidak melebihi batas aman. Ini yang paling disarankan agar tidak keliru.
+            </div>
+        `;
+    } else if(jenis === 'roas'){
+        panduanMode = `
+            <div class="info-box">
+                <strong>ℹ️ Mode ROAS Otomatis:</strong> Masukkan target ROAS sesuai hitungan di bawah. Sistem akan mengatur tawaran agar laba tetap terjaga.
+            </div>
+        `;
+    } else if(jenis === 'gmv'){
+        panduanMode = `
+            <div class="peringatan-box">
+                <strong>⚠️ Mode GMV Maksimal:</strong> Fokus pada omset, bukan laba. Pastikan anggaran tidak melebihi batas aman di bawah ini.
+            </div>
+        `;
+    }
+
+    // TAMPILKAN HASIL LENGKAP
     const isi = `
-        <div class="item-hasil utama"><span>Total Unit Bulanan</span><span>${unitBulanan.toLocaleString()} Unit</span></div>
-        <div class="item-hasil harian"><span>Unit Rata-rata Harian</span><span>${unitHarian} Unit</span></div>
+        ${panduanMode}
+        <div class="rumus">
+            <strong>Rumus Dasar (Tidak Berubah):</strong><br>
+            Batas Biaya Iklan Aman = (Harga Jual - HPP - Semua Biaya Tetap) ÷ Target ROAS<br>
+            Angka ini berlaku untuk SEMUA platform iklan.
+        </div>
+
+        <div class="item-hasil utama bulanan"><span>Total Unit Harus Terjual Sebulan</span><span>${unitBulanan.toLocaleString()} Unit</span></div>
+        <div class="item-hasil harian"><span>Unit Rata-rata Harian Tiap Hari</span><span>${unitHarian} Unit</span></div>
         <div class="item-hasil"><span>Biaya Admin Platform</span><span>Rp ${biayaAdminSatuan.toLocaleString()}</span></div>
         <div class="item-hasil"><span>Biaya Lain & Afiliasi</span><span>Rp ${(biayaLainSatuan+biayaAfiliasiSatuan).toLocaleString()}</span></div>
         <div class="item-hasil"><span>Total Biaya Tanpa Iklan</span><span>Rp ${totalBiayaNonIklan.toLocaleString()}</span></div>
         <div class="item-hasil utama"><span>Margin Sebelum Biaya Iklan</span><span>Rp ${margin.toLocaleString()}</span></div>
-        <div class="item-hasil"><span>✅ Batas Biaya Iklan Aman / Unit</span><span class="hijau">Rp ${batasIklanAman.toLocaleString()}</span></div>
-        <div class="item-hasil"><span>Anggaran Iklan Aman Harian</span><span>Rp ${anggaranHarian.toLocaleString()}</span></div>
-        <div class="item-hasil"><span>Estimasi Klik Harian</span><span>${klikHarian.toLocaleString()} kali</span></div>
-        <div class="item-hasil"><span>Estimasi Pesanan Harian</span><span>${estimasiPesanan} Unit</span></div>
+        <div class="item-hasil utama hijau"><span>✅ Batas Biaya Iklan Aman / Unit</span><span>Rp ${batasIklanAman.toLocaleString()}</span></div>
+        <div class="item-hasil"><span>Anggaran Iklan Aman Tiap Hari</span><span>Rp ${anggaranHarian.toLocaleString()}</span></div>
+        <div class="item-hasil"><span>Batas Tawaran/CPC Tertinggi</span><span class="merah">Rp ${Math.min(cpc, batasIklanAman).toLocaleString()}</span></div>
+        <div class="item-hasil"><span>Estimasi Klik Tiap Hari</span><span>${klikHarian.toLocaleString()} kali</span></div>
+        <div class="item-hasil"><span>Estimasi Pesanan Tiap Hari</span><span>${estimasiPesanan} Unit</span></div>
 
-        <div class="sukses-box" style="margin-top:16px;">
-            <strong>📝 Panduan Semua Platform:</strong><br>
-            • Jangan atur tawaran/CPC lebih tinggi dari <strong>Rp ${batasIklanAman.toLocaleString()}</strong><br>
-            • Masukkan target ROAS <strong>${roas}x</strong> jika menggunakan mode otomatis<br>
-            • Anggaran harian maksimal aman: <strong>Rp ${anggaranHarian.toLocaleString()}</strong><br>
-            • Berlaku untuk semua aplikasi iklan yang kamu gunakan
+        <div class="bagian">
+            <h4>📝 Langkah Pengaturan di Platform ${platform}</h4>
+            <div class="langkah"><span>1.</span> Pilih tujuan kampanye: <strong>Pesanan / Konversi</strong></div>
+            <div class="langkah"><span>2.</span> Jika pakai ROAS otomatis, masukkan target: <strong>${roas}x</strong></div>
+            <div class="langkah"><span>3.</span> JANGAN atur tawaran/CPC lebih tinggi dari <strong>Rp ${batasIklanAman.toLocaleString()}</strong></div>
+            <div class="langkah"><span>4.</span> Atur anggaran harian maksimal: <strong>Rp ${anggaranHarian.toLocaleString()}</strong></div>
+            <div class="langkah"><span>5.</span> Pantau 3 hari dulu, baru ubah angka sedikit demi sedikit</div>
         </div>
     `;
 
-    document.getElementById('hasil_lengkap').style.display = 'block';
-    document.getElementById('isi_lengkap').innerHTML = isi;
-
-    // ISI RINGKASAN OTOMATIS
-    document.getElementById('r_omset').innerText = 'Rp ' + omset.toLocaleString();
-    document.getElementById('r_harga').innerText = 'Rp ' + harga.toLocaleString();
-    document.getElementById('r_unit_bulan').innerText = unitBulanan.toLocaleString() + ' Unit';
-    document.getElementById('r_unit_hari').innerText = unitHarian + ' Unit';
-    document.getElementById('r_hpp').innerText = 'Rp ' + hpp.toLocaleString();
-    document.getElementById('r_biaya_noniklan').innerText = 'Rp ' + totalBiayaNonIklan.toLocaleString();
-    document.getElementById('r_margin').innerText = 'Rp ' + margin.toLocaleString();
-    document.getElementById('r_batas_iklan').innerText = 'Rp ' + batasIklanAman.toLocaleString();
-    document.getElementById('r_anggaran_harian').innerText = 'Rp ' + anggaranHarian.toLocaleString();
+    document.getElementById('hasil_set_iklan').style.display = 'block';
+    document.getElementById('isi_set_iklan').innerHTML = isi;
 }
 </script>
 </body>
