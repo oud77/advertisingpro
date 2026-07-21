@@ -64,7 +64,7 @@
         .item-hasil span:last-child {font-weight:600;}
         .item-hasil:last-child {border:none; padding-top:12px; margin-top:8px; font-size:18px; font-weight:800; color:var(--utama);}
         .grafik-boks {background: var(--putih); padding:20px; border-radius: var(--radius); box-shadow: var(--bayangan); margin-bottom:20px;}
-        canvas {width:100%; height:280px;}
+        canvas {width:100% !important; height:200px !important;} /* Tinggi grafik diperkecil */
         .merah {color: var(--bahaya);}
         .hijau {color: var(--sukses);}
         .daftar-kompetitor {margin-top:12px;}
@@ -78,6 +78,7 @@
             body {padding:12px;}
             .header h1 {font-size:22px;}
             .baris {grid-template-columns:1fr;}
+            canvas {height:180px !important;}
         }
     </style>
 </head>
@@ -122,7 +123,7 @@
         </div>
     </div>
     <div class="grafik-boks">
-        <h3 style="margin-bottom:16px;"><i class="fa fa-area-chart"></i> Perbandingan Omset Kamu vs Kompetitor</h3>
+        <h3 style="margin-bottom:16px;"><i class="fa fa-bar-chart"></i> Perbandingan Omset Kamu vs Kompetitor</h3>
         <canvas id="grafikBanding"></canvas>
     </div>
 </div>
@@ -490,17 +491,34 @@ function muatRingkasan(){
 function buatGrafikBanding(omsetKamu, omsetRata){
     if(grafikBanding) grafikBanding.destroy();
     grafikBanding = new Chart(document.getElementById('grafikBanding'),{
-        type:'bar',
+        type:'bar', /* Tetap model batang yang jelas dan padat */
         data:{
             labels: ['Omset Kamu', 'Rata-rata Kompetitor'],
             datasets:[{
-                label:'Omset dalam Juta Rupiah',
-                data: [omsetKamu/1000000, omsetRata/1000000],
+                label:'Omset dalam Ribuan Rupiah',
+                data: [omsetKamu/1000, omsetRata/1000],
                 backgroundColor: ['rgba(22,93,255,0.7)', 'rgba(255,125,0,0.7)'],
                 borderWidth:0,
-                borderRadius:8
+                borderRadius:10,
+                barThickness:60 /* Lebar batang diatur agar lebih rapi */
             }]
-        }, options:{responsive:true, maintainAspectRatio:false}
+        }, 
+        options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            plugins:{
+                legend:{display:false}
+            },
+            scales:{
+                y:{
+                    beginAtZero:true,
+                    grid:{display:true, color:'rgba(0,0,0,0.03)'}
+                },
+                x:{
+                    grid:{display:false}
+                }
+            }
+        }
     });
 }
 
