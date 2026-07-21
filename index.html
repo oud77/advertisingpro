@@ -57,9 +57,12 @@
         .btn-kuning {background: var(--peringatan); color:white; box-shadow:0 4px 12px rgba(255,125,0,0.25);}
         .btn:hover {transform: translateY(-2px);}
         .btn-small {padding:10px 16px; width:auto; align-self:end;}
-        .hasil-set {background: #F7F8FA; border-radius:12px; padding:18px; margin-top:16px; border:1px solid var(--batas);}
-        .item-hasil {display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--batas); font-size:14px;}
-        .item-hasil:last-child {border:none; font-weight:700; font-size:16px; color: var(--utama);}
+        .hasil-kalkulasi {background: linear-gradient(135deg, #F7F9FF, #FFFFFF); border-radius:14px; padding:24px; margin-top:20px; border:1px solid rgba(22,93,255,0.15);}
+        .judul-hasil {font-size:16px; font-weight:700; color:var(--utama); margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid var(--batas); display:flex; align-items:center; gap:8px;}
+        .item-hasil {display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px dashed var(--batas); font-size:14px;}
+        .item-hasil span:first-child {font-weight:500; color:var(--abu);}
+        .item-hasil span:last-child {font-weight:600;}
+        .item-hasil:last-child {border:none; padding-top:12px; margin-top:8px; font-size:18px; font-weight:800; color:var(--utama);}
         .grafik-boks {background: var(--putih); padding:20px; border-radius: var(--radius); box-shadow: var(--bayangan); margin-bottom:20px;}
         canvas {width:100%; height:280px;}
         .merah {color: var(--bahaya);}
@@ -70,6 +73,7 @@
         .selisih.lebih {background:rgba(0,180,42,0.1); color:var(--sukses);}
         .selisih.kurang {background:rgba(245,63,63,0.1); color:var(--bahaya);}
         .keterangan-panduan {margin-top:10px; padding:10px; background:rgba(22,93,255,0.05); border-radius:8px; font-size:13px; line-height:1.6;}
+        .keterangan-kalkulator {margin-top:12px; font-size:12px; color:var(--abu); line-height:1.5; padding:10px; background:rgba(22,93,255,0.03); border-radius:8px;}
         @media (max-width:768px) {
             body {padding:12px;}
             .header h1 {font-size:22px;}
@@ -80,7 +84,7 @@
 <body>
 
 <div class="header">
-    <h1><i class="fa fa-line-chart"></i> AdsPro Bisnis & Panduan Set Iklan</h1>
+    <h1><i class="fa fa-line-chart"></i> AdsPro Bisnis & Panduan Iklan</h1>
     <p>Pantau Data, Hitung Laba, Bandingkan Kompetitor, & Dapatkan Panduan Set Iklan Terbaik</p>
 </div>
 
@@ -152,27 +156,72 @@
     </div>
 </div>
 
-<!-- KALKULATOR CUAN -->
+<!-- KALKULATOR CUAN (VERSI PROFESIONAL) -->
 <div id="tab-kalkulator" class="konten">
     <div class="form-boks">
-        <h3><i class="fa fa-calculator"></i> Hitung Laba Bersih Per Penjualan</h3>
+        <h3><i class="fa fa-calculator"></i> Kalkulator Laba Bersih Per Produk</h3>
+        <div class="info-box">
+            <i class="fa fa-info-circle"></i> <strong>Petunjuk:</strong> Masukkan data harga dan biaya di bawah ini, hasil akan muncul secara otomatis. Perhitungan sudah disesuaikan standar akuntansi bisnis online.
+        </div>
+
         <div class="baris">
-            <div class="grup"><label>Harga Jual Produk (Rp)</label><input type="number" id="harga-jual" min="0" oninput="hitungCuan()"></div>
-            <div class="grup"><label>Modal Barang / HPP (Rp)</label><input type="number" id="modal" min="0" oninput="hitungCuan()"></div>
+            <div class="grup">
+                <label>Harga Jual Produk (Rp)</label>
+                <input type="number" id="harga-jual" min="0" placeholder="Contoh: 150000" oninput="hitungCuan()">
+            </div>
+            <div class="grup">
+                <label>Modal Pokok Barang / HPP (Rp)</label>
+                <input type="number" id="modal" min="0" placeholder="Contoh: 75000" oninput="hitungCuan()">
+            </div>
         </div>
         <div class="baris">
-            <div class="grup"><label>Biaya Iklan per Produk (Rp)</label><input type="number" id="iklan-per" min="0" oninput="hitungCuan()"></div>
-            <div class="grup"><label>Biaya Kirim & Packing (Rp)</label><input type="number" id="ongkir" min="0" oninput="hitungCuan()"></div>
-            <div class="grup"><label>Biaya Admin Platform (%)</label><input type="number" id="admin" min="0" max="100" value="0" oninput="hitungCuan()"></div>
+            <div class="grup">
+                <label>Biaya Iklan Rata-rata Per Produk (Rp)</label>
+                <input type="number" id="iklan-per" min="0" placeholder="Contoh: 15000" oninput="hitungCuan()">
+            </div>
+            <div class="grup">
+                <label>Biaya Komisi & Admin Platform (%)</label>
+                <input type="number" id="admin" min="0" max="100" value="0" placeholder="Contoh: 6" oninput="hitungCuan()">
+            </div>
         </div>
 
         <div class="hasil-kalkulasi">
-            <h4 style="margin-bottom:12px; color:var(--utama);">📋 HASIL PERHITUNGAN OTOMATIS</h4>
-            <div class="item-hasil"><span>Harga Jual</span><span id="h-jual">Rp 0</span></div>
-            <div class="item-hasil"><span>Total Potongan Biaya</span><span id="t-potong">Rp 0</span></div>
-            <div class="item-hasil"><span>Laba Kotor</span><span id="l-kotor">Rp 0</span></div>
-            <div class="item-hasil"><span>Persentase Laba</span><span id="p-laba">0%</span></div>
-            <div class="item-hasil"><span>💸 LABA BERSIH PER ITEM</span><span id="l-bersih">Rp 0</span></div>
+            <div class="judul-hasil"><i class="fa fa-bar-chart"></i> HASIL PERHITUNGAN LABA</div>
+            <div class="item-hasil">
+                <span>Harga Jual</span>
+                <span id="h-jual">Rp 0</span>
+            </div>
+            <div class="item-hasil">
+                <span>Biaya Admin & Komisi</span>
+                <span id="biaya-admin">Rp 0</span>
+            </div>
+            <div class="item-hasil">
+                <span>Biaya Iklan Per Produk</span>
+                <span id="biaya-iklan-per">Rp 0</span>
+            </div>
+            <div class="item-hasil">
+                <span>Modal Pokok Barang</span>
+                <span id="biaya-modal">Rp 0</span>
+            </div>
+            <div class="item-hasil">
+                <span>Total Seluruh Biaya</span>
+                <span id="total-biaya">Rp 0</span>
+            </div>
+            <div class="item-hasil">
+                <span>Persentase Laba Terhadap Harga</span>
+                <span id="persen-laba">0%</span>
+            </div>
+            <div class="item-hasil">
+                <span>💸 LABA BERSIH PER SATU PRODUK</span>
+                <span id="laba-bersih">Rp 0</span>
+            </div>
+        </div>
+
+        <div class="keterangan-kalkulator">
+            <strong>Keterangan:</strong><br>
+            • Laba bersih = Harga Jual - (Modal + Biaya Iklan + Biaya Admin)<br>
+            • Biaya admin sudah mencakup komisi penjual, biaya layanan, dan biaya transaksi marketplace<br>
+            • Angka negatif berarti produk tersebut mengalami kerugian
         </div>
     </div>
 </div>
@@ -477,25 +526,29 @@ function muatDaftarKompetitor(){
     }).join('');
 }
 
+// Fungsi Kalkulator Cuan yang Diperbarui
 function hitungCuan(){
-    const jual = Number(document.getElementById('harga-jual').value)||0;
+    const hargaJual = Number(document.getElementById('harga-jual').value)||0;
     const modal = Number(document.getElementById('modal').value)||0;
-    const iklan = Number(document.getElementById('iklan-per').value)||0;
-    const kirim = Number(document.getElementById('ongkir').value)||0;
-    const admin = Number(document.getElementById('admin').value)||0;
+    const biayaIklan = Number(document.getElementById('iklan-per').value)||0;
+    const persenAdmin = Number(document.getElementById('admin').value)||0;
 
-    const biayaAdmin = jual * (admin/100);
-    const totalBiaya = modal + iklan + kirim + biayaAdmin;
-    const labaKotor = jual - modal;
-    const labaBersih = jual - totalBiaya;
-    const persen = jual>0 ? ((labaBersih/jual)*100).toFixed(1) : 0;
+    const biayaAdmin = hargaJual * (persenAdmin / 100);
+    const totalBiaya = modal + biayaIklan + biayaAdmin;
+    const labaBersih = hargaJual - totalBiaya;
+    const persenLaba = hargaJual > 0 ? ((labaBersih / hargaJual) * 100).toFixed(1) : 0;
 
-    document.getElementById('h-jual').innerText = `Rp ${jual.toLocaleString()}`;
-    document.getElementById('t-potong').innerText = `Rp ${totalBiaya.toLocaleString()}`;
-    document.getElementById('l-kotor').innerText = `Rp ${labaKotor.toLocaleString()}`;
-    document.getElementById('p-laba').innerText = `${persen}%`;
-    document.getElementById('l-bersih').innerText = `Rp ${labaBersih.toLocaleString()}`;
-    document.getElementById('l-bersih').style.color = labaBersih>=0 ? '#00B42A' : '#F53F3F';
+    // Tampilkan hasil
+    document.getElementById('h-jual').innerText = `Rp ${hargaJual.toLocaleString()}`;
+    document.getElementById('biaya-admin').innerText = `Rp ${biayaAdmin.toLocaleString()}`;
+    document.getElementById('biaya-iklan-per').innerText = `Rp ${biayaIklan.toLocaleString()}`;
+    document.getElementById('biaya-modal').innerText = `Rp ${modal.toLocaleString()}`;
+    document.getElementById('total-biaya').innerText = `Rp ${totalBiaya.toLocaleString()}`;
+    document.getElementById('persen-laba').innerText = `${persenLaba}%`;
+    
+    const elemenLaba = document.getElementById('laba-bersih');
+    elemenLaba.innerText = `Rp ${labaBersih.toLocaleString()}`;
+    elemenLaba.style.color = labaBersih >= 0 ? '#00B42A' : '#F53F3F';
 }
 
 function muatLaporan(){
