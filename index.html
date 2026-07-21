@@ -1,1 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdsPro Bisnis - Dashboard & Kompetitor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --utama: #165DFF;
+            --sekunder: #36CBCB;
+            --sukses: #00B42A;
+            --peringatan: #FF7D00;
+            --bahaya: #F53F3F;
+            --gelap: #1D2129;
+            --latar: #F2F3F5;
+            --putih: #FFFFFF;
+            --abu: #4E5969;
+            --batas: #E5E6EB;
+            --bayangan: 0 4px 20px rgba(22,93,255,0.08);
+            --radius: 16px;
+        }
+        * {margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', 'Roboto', sans-serif;}
+        body {background: var(--latar); color: var(--gelap); padding: 20px; max-width: 1400px; margin: 0 auto;}
+        .header {background: linear-gradient(135deg, var(--utama), var(--sekunder)); color:white; padding: 24px 30px; border-radius: var(--radius); margin-bottom: 24px; box-shadow: var(--bayangan);}
+        .header h1 {font-size: 26px; font-weight: 800; margin-bottom: 4px;}
+        .header p {opacity: 0.9; font-size: 14px;}
+        .nav {display:flex; gap:10px; margin-bottom: 24px; overflow-x:auto; padding-bottom:6px;}
+        .nav-btn {padding:10px 18px; border-radius: 25px; border:none; background: var(--putih); color: var(--abu); font-weight: 600; cursor:pointer; transition:0.2s; white-space:nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
+        .nav-btn.aktif {background: var(--utama); color:white; box-shadow: 0 4px 12px rgba(22,93,255,0.3);}
+        .konten {display:none; animation: fade 0.3s ease;}
+        .konten.aktif {display:block;}
+        @keyframes fade {from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+        .grid {display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; margin-bottom:20px;}
+        .kartu {background: var(--putih); padding:20px; border-radius: var(--radius); box-shadow: var(--bayangan); border-left: 4px solid var(--utama);}
+        .kartu.kompetitor {border-left-color: var(--peringatan);}
+        .kartu h4 {font-size:13px; color: var(--abu); font-weight:500; margin-bottom:6px;}
+        .kartu .nilai {font-size:24px; font-weight:800; margin-bottom:4px;}
+        .kartu .keterangan {font-size:12px; display:flex; align-items:center; gap:4px;}
+        .naik {color: var(--sukses);}
+        .turun {color: var(--bahaya);}
+        .form-boks {background: var(--putih); padding:24px; border-radius: var(--radius); box-shadow: var(--bayangan); margin-bottom:20px;}
+        .form-boks h3 {font-size:18px; font-weight:700; margin-bottom:18px; display:flex; align-items:center; gap:8px; color: var(--utama);}
+        .baris {display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:14px; margin-bottom:14px;}
+        .grup {display:flex; flex-direction:column; gap:6px;}
+        label {font-size:14px; font-weight:600; color: var(--gelap);}
+        input, select {padding:10px 14px; border:1px solid var(--batas); border-radius:10px; font-size:15px; transition:0.2s;}
+        input:focus, select:focus {outline:none; border-color: var(--utama); box-shadow: 0 0 0 3px rgba(22,93,255,0.1);}
+        .btn {padding:12px 24px; border:none; border-radius:10px; font-weight:600; cursor:pointer; transition:0.2s; font-size:15px;}
+        .btn-utama {background: var(--utama); color:white; width:100%; box-shadow: 0 4px 12px rgba(22,93,255,0.25);}
+        .btn-kuning {background: var(--peringatan); color:white; width:100%; box-shadow: 0 4px 12px rgba(255,125,0,0.25);}
+        .btn:hover {transform: translateY(-2px);}
+        .hasil-kalkulasi {background: #F7F8FA; border-radius:12px; padding:18px; margin-top:16px; border:1px solid var(--batas);}
+        .item-hasil {display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--batas); font-size:14px;}
+        .item-hasil:last-child {border:none; font-weight:700; font-size:16px; color: var(--utama);}
+        .grafik-boks {background: var(--putih); padding:20px; border-radius: var(--radius); box-shadow: var(--bayangan); margin-bottom:20px;}
+        canvas {width:100%; height:280px;}
+        .merah {color: var(--bahaya);}
+        .hijau {color: var(--sukses);}
+        .daftar-kompetitor {margin-top:12px;}
+        .item-kompetitor {padding:12px; border-bottom:1px solid var(--batas); display:flex; justify-content:space-between; align-items:center;}
+        .selisih {font-weight:700; padding:4px 8px; border-radius:6px; font-size:12px;}
+        .selisih.lebih {background:rgba(0,180,42,0.1); color:var(--sukses);}
+        .selisih.kurang {background:rgba(245,63,63,0.1); color:var(--bahaya);}
+        @media (max-width:768px) {
+            body {padding:12px;}
+            .header h1 {font-size:22px;}
+        }
+    </style>
+</head>
+<body>
 
+<div class="header">
+    <h1><i class="fa fa-line-chart"></i> AdsPro Bisnis & Kompetitor</h1>
+    <p>Pantau Iklan, Hitung Laba, & Bandingkan dengan Kompetitor</p>
+</div>
+
+<div class="nav">
+    <button class="nav-btn aktif" onclick="bukaTab('ringkasan')">📊 Ringkasan</button>
+    <button class="nav-btn" onclick="bukaTab('iklan')">📈 Data Iklan</button>
+    <button class="nav-btn" onclick="bukaTab('kalkulator')">🧮 Kalkulator Cuan</button>
+    <button class="nav-btn" onclick="bukaTab('kompetitor')">⚔️ Kompetitor</button>
+    <button class="nav-btn" onclick="bukaTab('laporan')">📑 Laporan</button>
+</div>
+
+<!-- RINGKASAN -->
+<div id="tab-ringkasan" class="konten aktif">
+    <div class="grid">
+        <div class="kartu">
+            <h4>Total Omset Kamu</h4>
+            <div class="nilai" id="omzet">Rp 0</div>
+            <div class="keterangan">Total Penjualan</div>
+        </div>
+        <div class="kartu">
+            <h4>Total Biaya Iklan</h4>
+            <div class="nilai" id="biaya-iklan">Rp 0</div>
+            <div class="keterangan">Seluruh Platform</div>
+        </div>
+        <div class="kartu">
+            <h4>ROAS Rata-rata</h4>
+            <div class="nilai" id="roas-nilai">0.0x</div>
+            <div class="keterangan" id="status-roas">--</div>
+        </div>
+        <div class="kartu kartu-kompetitor">
+            <h4>Omset Rata Kompetitor</h4>
+            <div class="nilai" id="omset-kompetitor">Rp 0</div>
+            <div class="keterangan" id="status-band">--</div>
+        </div>
+    </div>
+    <div class="grafik-boks">
+        <h3 style="margin-bottom:16px;"><i class="fa fa-area-chart"></i> Perbandingan Omset Kamu vs Kompetitor</h3>
+        <canvas id="grafikBanding"></canvas>
+    </div>
+</div>
+
+<!-- DATA IKLAN -->
+<div id="tab-iklan" class="konten">
+    <div class="form-boks">
+        <h3><i class="fa fa-plus-circle"></i> Masukkan Data Kampanye</h3>
+        <div class="baris">
+            <div class="grup">
+                <label>Tanggal</label>
+                <input type="date" id="tgl">
+            </div>
+            <div class="grup">
+                <label>Platform</label>
+                <select id="platform">
+                    <option value="Meta">Meta (FB/IG)</option>
+                    <option value="Google">Google Ads</option>
+                    <option value="TikTok">TikTok Ads</option>
+                    <option value="Shopee">Iklan Shopee</option>
+                    <option value="Tokopedia">Iklan Tokopedia</option>
+                </select>
+            </div>
+        </div>
+        <div class="baris">
+            <div class="grup"><label>Biaya Iklan (Rp)</label><input type="number" id="biaya" min="0"></div>
+            <div class="grup"><label>Total Penjualan (Rp)</label><input type="number" id="jual" min="0"></div>
+            <div class="grup"><label>Jumlah Pesanan</label><input type="number" id="pesanan" min="0"></div>
+        </div>
+        <button class="btn btn-utama" onclick="simpanIklan()"><i class="fa fa-save"></i> Simpan Data Iklan</button>
+    </div>
+</div>
+
+<!-- KALKULATOR CUAN -->
+<div id="tab-kalkulator" class="konten">
+    <div class="form-boks">
+        <h3><i class="fa fa-calculator"></i> Hitung Laba Bersih Per Penjualan</h3>
+        <div class="baris">
+            <div class="grup"><label>Harga Jual Produk (Rp)</label><input type="number" id="harga-jual" min="0" oninput="hitungCuan()"></div>
+            <div class="grup"><label>Modal Barang / HPP (Rp)</label><input type="number" id="modal" min="0" oninput="hitungCuan()"></div>
+        </div>
+        <div class="baris">
+            <div class="grup"><label>Biaya Iklan per Produk (Rp)</label><input type="number" id="iklan-per" min="0" oninput="hitungCuan()"></div>
+            <div class="grup"><label>Biaya Kirim & Packing (Rp)</label><input type="number" id="ongkir" min="0" oninput="hitungCuan()"></div>
+            <div class="grup"><label>Biaya Admin Platform (%)</label><input type="number" id="admin" min="0" max="100" value="0" oninput="hitungCuan()"></div>
+        </div>
+
+        <div class="hasil-kalkulasi">
+            <h4 style="margin-bottom:12px; color:var(--utama);">📋 HASIL PERHITUNGAN OTOMATIS</h4>
+            <div class="item-hasil"><span>Harga Jual</span><span id="h-jual">Rp 0</span></div>
+            <div class="item-hasil"><span>Total Potongan Biaya</span><span id="t-potong">Rp 0</span></div>
+            <div class="item-hasil"><span>Laba Kotor</span><span id="l-kotor">Rp 0</span></div>
+            <div class="item-hasil"><span>Persentase Laba</span><span id="p-laba">0%</span></div>
+            <div class="item-hasil"><span>💸 LABA BERSIH PER ITEM</span><span id="l-bersih">Rp 0</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- KOMPETITOR -->
+<div id="tab-kompetitor" class="konten">
+    <div class="form-boks">
+        <h3><i class="fa fa-users"></i> Masukkan Data Kompetitor</h3>
+        <div class="baris">
+            <div class="grup"><label>Periode Bulan/Tahun</label><input type="month" id="periode-kompetitor"></div>
+            <div class="grup"><label>Nama Toko/Brand Kompetitor</label><input type="text" id="nama-kompetitor" placeholder="Contoh: Toko Aneka"></div>
+        </div>
+        <div class="baris">
+            <div class="grup"><label>Platform Kompetitor</label>
+                <select id="plat-kompetitor">
+                    <option value="Shopee">Shopee</option>
+                    <option value="Tokopedia">Tokopedia</option>
+                    <option value="TikTok">TikTok Shop</option>
+                    <option value="Lazada">Lazada</option>
+                    <option value="Website">Website Sendiri</option>
+                </select>
+            </div>
+            <div class="grup"><label>Estimasi Omset Kompetitor (Rp)</label><input type="number" id="omset-komp" min="0"></div>
+        </div>
+        <button class="btn btn-kuning" onclick="simpanKompetitor()"><i class="fa fa-plus"></i> Tambah Data Kompetitor</button>
+    </div>
+
+    <div class="form-boks">
+        <h3><i class="fa fa-balance-scale"></i> Perbandingan dengan Kompetitor</h3>
+        <div id="daftar-kompetitor" class="daftar-kompetitor">
+            <p style="text-align:center; color:var(--abu); padding:20px;">Belum ada data kompetitor yang dimasukkan.</p>
+        </div>
+    </div>
+</div>
+
+<!-- LAPORAN -->
+<div id="tab-laporan" class="konten">
+    <div class="form-boks">
+        <h3><i class="fa fa-list-alt"></i> Riwayat Data & Laporan</h3>
+        <div id="daftar-data" style="margin-top:10px;">
+            <p style="color:var(--abu); text-align:center;">Belum ada data tersimpan.</p>
+        </div>
+        <br>
+        <button class="btn btn-utama" onclick="ekspor()"><i class="fa fa-download"></i> Unduh Data Excel</button>
+    </div>
+</div>
+
+<script>
+let dataSemua = JSON.parse(localStorage.getItem('dataPro') || '[]');
+let dataKompetitor = JSON.parse(localStorage.getItem('dataKompetitor') || '[]');
+let grafikBanding;
+document.getElementById('tgl').valueAsDate = new Date();
+document.getElementById('periode-kompetitor').value = new Date().toISOString().slice(0,7);
+muatRingkasan();
+
+function bukaTab(nama){
+    document.querySelectorAll('.konten').forEach(k=>k.classList.remove('aktif'));
+    document.querySelectorAll('.nav-btn').forEach(k=>k.classList.remove('aktif'));
+    document.getElementById(`tab-${nama}`).classList.add('aktif');
+    event.target.classList.add('aktif');
+    if(nama=='ringkasan') muatRingkasan();
+    if(nama=='laporan') muatLaporan();
+    if(nama=='kompetitor') muatDaftarKompetitor();
+}
+
+function simpanIklan(){
+    const d = {
+        tgl:document.getElementById('tgl').value,
+        platform:document.getElementById('platform').value,
+        biaya:Number(document.getElementById('biaya').value)||0,
+        jual:Number(document.getElementById('jual').value)||0,
+        pesanan:Number(document.getElementById('pesanan').value)||0
+    };
+    dataSemua.push(d);
+    localStorage.setItem('dataPro', JSON.stringify(dataSemua));
+    alert('✅ Data Iklan Tersimpan!');
+    muatRingkasan();
+}
+
+function simpanKompetitor(){
+    const d = {
+        periode:document.getElementById('periode-kompetitor').value,
+        nama:document.getElementById('nama-kompetitor').value,
+        platform:document.getElementById('plat-kompetitor').value,
+        omset:Number(document.getElementById('omset-komp').value)||0
+    };
+    if(!d.nama || !d.omset) {alert('Lengkapi nama dan omset kompetitor!'); return;}
+    dataKompetitor.push(d);
+    localStorage.setItem('dataKompetitor', JSON.stringify(dataKompetitor));
+    alert('✅ Data Kompetitor Tersimpan!');
+    muatRingkasan();
+    muatDaftarKompetitor();
+}
+
+function muatRingkasan(){
+    const totalJual = dataSemua.reduce((s,d)=>s+d.jual,0);
+    const totalBiaya = dataSemua.reduce((s,d)=>s+d.biaya,0);
+    const roas = totalBiaya>0 ? (totalJual/totalBiaya).toFixed(1) : 0;
+    const rataKompetitor = dataKompetitor.length ? Math.round(dataKompetitor.reduce((s,d)=>s+d.omset,0)/dataKompetitor.length) : 0;
+
+    document.getElementById('omzet').innerText = `Rp ${totalJual.toLocaleString()}`;
+    document.getElementById('biaya-iklan').innerText = `Rp ${totalBiaya.toLocaleString()}`;
+    document.getElementById('roas-nilai').innerText = `${roas}x`;
+    document.getElementById('omset-kompetitor').innerText = `Rp ${rataKompetitor.toLocaleString()}`;
+    
+    document.getElementById('status-roas').innerHTML = roas>=4 ? `<span class="hijau"><i class="fa fa-arrow-up"></i> Sangat Bagus</span>` : `<span class="merah"><i class="fa fa-arrow-down"></i> Perlu Ditingkatkan</span>`;
+    
+    const selisih = totalJual - rataKompetitor;
+    const persenSelisih = rataKompetitor>0 ? Math.round((selisih/rataKompetitor)*100) : 0;
+    document.getElementById('status-band').innerHTML = rataKompetitor==0 ? `<span>Belum Ada Data</span>` :
+        selisih>=0 ? `<span class="hijau">+${persenSelisih}% Lebih Tinggi</span>` : `<span class="merah">${persenSelisih}% Lebih Rendah</span>`;
+
+    buatGrafikBanding(totalJual, rataKompetitor);
+}
+
+function buatGrafikBanding(omsetKamu, omsetRata){
+    if(grafikBanding) grafikBanding.destroy();
+    grafikBanding = new Chart(document.getElementById('grafikBanding'),{
+        type:'bar',
+        data:{
+            labels: ['Omset Kamu', 'Rata-rata Kompetitor'],
+            datasets:[{
+                label:'Omset dalam Juta Rupiah',
+                data: [omsetKamu/1000000, omsetRata/1000000],
+                backgroundColor: ['rgba(22,93,255,0.7)', 'rgba(255,125,0,0.7)'],
+                borderWidth:0,
+                borderRadius:8
+            }]
+        }, options:{responsive:true, maintainAspectRatio:false}
+    });
+}
+
+function muatDaftarKompetitor(){
+    const wadah = document.getElementById('daftar-kompetitor');
+    const totalKamu = dataSemua.reduce((s,d)=>s+d.jual,0);
+    if(!dataKompetitor.length) {
+        wadah.innerHTML='<p style="text-align:center; color:var(--abu); padding:20px;">Belum ada data kompetitor yang dimasukkan.</p>';
+        return;
+    }
+    wadah.innerHTML = dataKompetitor.map((d,i)=>{
+        const selisih = totalKamu - d.omset;
+        const persen = d.omset>0 ? Math.round((selisih/d.omset)*100) : 0;
+        return `<div class="item-kompetitor">
+            <div>
+                <strong>${d.nama}</strong> <small style="color:var(--abu)">(${d.platform} - ${d.periode})</small><br>
+                <small>Omset: Rp ${d.omset.toLocaleString()}</small>
+            </div>
+            <span class="selisih ${selisih>=0 ? 'lebih' : 'kurang'}">
+                ${selisih>=0 ? '+' : ''}${persen}% ${selisih>=0 ? 'Di Atas' : 'Di Bawah'}
+            </span>
+        </div>`;
+    }).join('');
+}
+
+function hitungCuan(){
+    const jual = Number(document.getElementById('harga-jual').value)||0;
+    const modal = Number(document.getElementById('modal').value)||0;
+    const iklan = Number(document.getElementById('iklan-per').value)||0;
+    const kirim = Number(document.getElementById('ongkir').value)||0;
+    const admin = Number(document.getElementById('admin').value)||0;
+
+    const biayaAdmin = jual * (admin/100);
+    const totalBiaya = modal + iklan + kirim + biayaAdmin;
+    const labaKotor = jual - modal;
+    const labaBersih = jual - totalBiaya;
+    const persen = jual>0 ? ((labaBersih/jual)*100).toFixed(1) : 0;
+
+    document.getElementById('h-jual').innerText = `Rp ${jual.toLocaleString()}`;
+    document.getElementById('t-potong').innerText = `Rp ${totalBiaya.toLocaleString()}`;
+    document.getElementById('l-kotor').innerText = `Rp ${labaKotor.toLocaleString()}`;
+    document.getElementById('p-laba').innerText = `${persen}%`;
+    document.getElementById('l-bersih').innerText = `Rp ${labaBersih.toLocaleString()}`;
+    document.getElementById('l-bersih').style.color = labaBersih>=0 ? '#00B42A' : '#F53F3F';
+}
+
+function muatLaporan(){
+    const wadah = document.getElementById('daftar-data');
+    if(!dataSemua.length) {wadah.innerHTML='<p style="text-align:center;color:var(--abu);">Belum ada data.</p>'; return;}
+    wadah.innerHTML = dataSemua.map((d,i)=>`
+    <div style="padding:10px; border-bottom:1px solid var(--batas); display:flex; justify-content:space-between; font-size:14px;">
+        <span>${d.tgl} | ${d.platform}</span>
+        <span>Biaya: Rp ${d.biaya.toLocaleString()} | Jual: Rp ${d.jual.toLocaleString()}</span>
+    </div>`).join('');
+}
+
+function ekspor(){
+    let csv = "Tanggal,Platform,Biaya Iklan,Penjualan,Pesanan\n";
+    dataSemua.forEach(d=> csv += `${d.tgl},${d.platform},${d.biaya},${d.jual},${d.pesanan}\n`);
+    const blob = new Blob([csv], {type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `Laporan_AdsPro_${new Date().toLocaleDateString('id-ID')}.csv`;
+    a.click();
+}
+</script>
+</body>
+</html>
