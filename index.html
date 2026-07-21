@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AdsPro Bisnis - Dashboard & Kompetitor</title>
+    <title>AdsPro Bisnis - Dashboard & Panduan Iklan</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
@@ -25,16 +25,17 @@
         body {background: var(--latar); color: var(--gelap); padding: 20px; max-width: 1400px; margin: 0 auto;}
         .header {background: linear-gradient(135deg, var(--utama), var(--sekunder)); color:white; padding: 24px 30px; border-radius: var(--radius); margin-bottom: 24px; box-shadow: var(--bayangan);}
         .header h1 {font-size: 26px; font-weight: 800; margin-bottom: 4px;}
-        .header p {opacity: 0.9; font-size: 14px;}
-        .nav {display:flex; gap:10px; margin-bottom: 24px; overflow-x:auto; padding-bottom:6px;}
-        .nav-btn {padding:10px 18px; border-radius: 25px; border:none; background: var(--putih); color: var(--abu); font-weight: 600; cursor:pointer; transition:0.2s; white-space:nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
+        .header p {opacity: 0.9; font-size:14px;}
+        .nav {display:flex; gap:10px; margin-bottom:24px; overflow-x:auto; padding-bottom:6px;}
+        .nav-btn {padding:10px 18px; border-radius:25px; border:none; background: var(--putih); color: var(--abu); font-weight:600; cursor:pointer; transition:0.2s; white-space:nowrap; box-shadow: 0 2px 8px rgba(0,0,0,0.05);}
         .nav-btn.aktif {background: var(--utama); color:white; box-shadow: 0 4px 12px rgba(22,93,255,0.3);}
         .konten {display:none; animation: fade 0.3s ease;}
         .konten.aktif {display:block;}
         @keyframes fade {from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
         .grid {display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; margin-bottom:20px;}
-        .kartu {background: var(--putih); padding:20px; border-radius: var(--radius); box-shadow: var(--bayangan); border-left: 4px solid var(--utama);}
+        .kartu {background: var(--putih); padding:20px; border-radius: var(--radius); box-shadow: var(--bayangan); border-left:4px solid var(--utama);}
         .kartu.kompetitor {border-left-color: var(--peringatan);}
+        .kartu.iklan {border-left-color: var(--sekunder);}
         .kartu h4 {font-size:13px; color: var(--abu); font-weight:500; margin-bottom:6px;}
         .kartu .nilai {font-size:24px; font-weight:800; margin-bottom:4px;}
         .kartu .keterangan {font-size:12px; display:flex; align-items:center; gap:4px;}
@@ -42,20 +43,21 @@
         .turun {color: var(--bahaya);}
         .form-boks {background: var(--putih); padding:24px; border-radius: var(--radius); box-shadow: var(--bayangan); margin-bottom:20px;}
         .form-boks h3 {font-size:18px; font-weight:700; margin-bottom:18px; display:flex; align-items:center; gap:8px; color: var(--utama);}
-        .info-box {background:#FFF7E8; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; line-height:1.5;}
-        .info-box a {color:var(--peringatan); font-weight:600; text-decoration:none;}
+        .info-box {background:#F0F7FF; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; line-height:1.5; border-left:4px solid var(--utama);}
+        .peringatan-box {background:#FFF7E8; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; line-height:1.5; border-left:4px solid var(--peringatan);}
+        .sukses-box {background:#ECFDF3; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; line-height:1.5; border-left:4px solid var(--sukses);}
         .baris {display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:14px; margin-bottom:14px;}
         .grup {display:flex; flex-direction:column; gap:6px;}
         .grup.flex2 {flex:2;}
         label {font-size:14px; font-weight:600; color: var(--gelap);}
         input, select {padding:10px 14px; border:1px solid var(--batas); border-radius:10px; font-size:15px; transition:0.2s;}
-        input:focus, select:focus {outline:none; border-color: var(--utama); box-shadow: 0 0 0 3px rgba(22,93,255,0.1);}
+        input:focus, select:focus {outline:none; border-color: var(--utama); box-shadow:0 0 0 3px rgba(22,93,255,0.1);}
         .btn {padding:12px 24px; border:none; border-radius:10px; font-weight:600; cursor:pointer; transition:0.2s; font-size:15px;}
-        .btn-utama {background: var(--utama); color:white; box-shadow: 0 4px 12px rgba(22,93,255,0.25);}
-        .btn-kuning {background: var(--peringatan); color:white; box-shadow: 0 4px 12px rgba(255,125,0,0.25);}
+        .btn-utama {background: var(--utama); color:white; box-shadow:0 4px 12px rgba(22,93,255,0.25);}
+        .btn-kuning {background: var(--peringatan); color:white; box-shadow:0 4px 12px rgba(255,125,0,0.25);}
         .btn:hover {transform: translateY(-2px);}
         .btn-small {padding:10px 16px; width:auto; align-self:end;}
-        .hasil-kalkulasi {background: #F7F8FA; border-radius:12px; padding:18px; margin-top:16px; border:1px solid var(--batas);}
+        .hasil-set {background: #F7F8FA; border-radius:12px; padding:18px; margin-top:16px; border:1px solid var(--batas);}
         .item-hasil {display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--batas); font-size:14px;}
         .item-hasil:last-child {border:none; font-weight:700; font-size:16px; color: var(--utama);}
         .grafik-boks {background: var(--putih); padding:20px; border-radius: var(--radius); box-shadow: var(--bayangan); margin-bottom:20px;}
@@ -67,6 +69,7 @@
         .selisih {font-weight:700; padding:4px 8px; border-radius:6px; font-size:12px; white-space:nowrap;}
         .selisih.lebih {background:rgba(0,180,42,0.1); color:var(--sukses);}
         .selisih.kurang {background:rgba(245,63,63,0.1); color:var(--bahaya);}
+        .keterangan-panduan {margin-top:10px; padding:10px; background:rgba(22,93,255,0.05); border-radius:8px; font-size:13px; line-height:1.6;}
         @media (max-width:768px) {
             body {padding:12px;}
             .header h1 {font-size:22px;}
@@ -77,14 +80,15 @@
 <body>
 
 <div class="header">
-    <h1><i class="fa fa-line-chart"></i> AdsPro Bisnis & Kompetitor</h1>
-    <p>Pantau Iklan, Hitung Laba, & Bandingkan dengan Kompetitor</p>
+    <h1><i class="fa fa-line-chart"></i> AdsPro Bisnis & Panduan Set Iklan</h1>
+    <p>Pantau Data, Hitung Laba, Bandingkan Kompetitor, & Dapatkan Panduan Set Iklan Terbaik</p>
 </div>
 
 <div class="nav">
     <button class="nav-btn aktif" onclick="bukaTab('ringkasan')">📊 Ringkasan</button>
     <button class="nav-btn" onclick="bukaTab('iklan')">📈 Data Iklan</button>
     <button class="nav-btn" onclick="bukaTab('kalkulator')">🧮 Kalkulator Cuan</button>
+    <button class="nav-btn" onclick="bukaTab('setiklan')">⚙️ Perkiraan Set Iklan</button>
     <button class="nav-btn" onclick="bukaTab('kompetitor')">⚔️ Kompetitor</button>
     <button class="nav-btn" onclick="bukaTab('laporan')">📑 Laporan</button>
 </div>
@@ -173,22 +177,71 @@
     </div>
 </div>
 
+<!-- PERKIRAAN SET IKLAN -->
+<div id="tab-setiklan" class="konten">
+    <div class="form-boks">
+        <h3><i class="fa fa-sliders"></i> Masukkan Data untuk Perkiraan Set Iklan</h3>
+        <div class="info-box">
+            <i class="fa fa-info-circle"></i> <strong>Catatan:</strong> Angka ini adalah perkiraan berdasarkan rata-rata pasar di Indonesia. Hasil sebenarnya bisa berubah tergantung kompetisi dan kualitas materi iklan kamu.
+        </div>
+
+        <div class="baris">
+            <div class="grup">
+                <label>Platform Iklan yang Dituju</label>
+                <select id="set-platform" onchange="tampilkanPanduanPlatform()">
+                    <option value="">Pilih Platform</option>
+                    <option value="Meta">Meta (FB/IG)</option>
+                    <option value="TikTok">TikTok Ads</option>
+                    <option value="Shopee">Iklan Shopee</option>
+                    <option value="Tokopedia">Iklan Tokopedia</option>
+                </select>
+            </div>
+            <div class="grup">
+                <label>Tujuan Utama Iklan</label>
+                <select id="tujuan-iklan">
+                    <option value="konversi">Dapatkan Pesanan/Konversi</option>
+                    <option value="trafik">Bawa Pengunjung ke Toko</option>
+                    <option value="kesadaran">Perkenalkan Merek/Produk Baru</option>
+                </select>
+            </div>
+        </div>
+        <div class="baris">
+            <div class="grup"><label>Harga Jual Produk (Rp)</label><input type="number" id="set-harga" min="0"></div>
+            <div class="grup"><label>Anggaran Harian Maksimal (Rp)</label><input type="number" id="set-anggaran" min="0" value="50000"></div>
+        </div>
+        <div class="baris">
+            <div class="grup"><label>Kategori Produk</label>
+                <select id="kategori">
+                    <option value="umum">Produk Umum</option>
+                    <option value="fashion">Fashion & Aksesoris</option>
+                    <option value="kecantikan">Kecantikan & Perawatan</option>
+                    <option value="elektronik">Elektronik & Gadget</option>
+                    <option value="makanan">Makanan & Minuman</option>
+                    <option value="rumah">Perlengkapan Rumah</option>
+                </select>
+            </div>
+            <div class="grup"><label>Target ROAS Minimum</label><input type="number" id="target-roas-set" min="1" value="3" step="0.1"></div>
+        </div>
+        <button class="btn btn-utama" onclick="hitungSetIklan()"><i class="fa fa-calculator"></i> Hitung & Dapatkan Panduan</button>
+
+        <div id="hasil-set-iklan" class="hasil-set" style="display:none;">
+            <h4 style="margin-bottom:12px; color:var(--utama);">📋 PERKIRAAN & PANDUAN SET IKLAN</h4>
+            <div id="isi-hasil-set"></div>
+        </div>
+    </div>
+</div>
+
 <!-- KOMPETITOR -->
 <div id="tab-kompetitor" class="konten">
     <div class="form-boks">
         <h3><i class="fa fa-search"></i> Cari & Masukkan Data Kompetitor</h3>
-        
         <div class="info-box">
-            <i class="fa fa-info-circle"></i> <strong>Catatan Penting:</strong> Data omset kompetitor adalah estimasi (bukan angka resmi). Gunakan alat riset gratis seperti 
-            <a href="https://tokpee.co" target="_blank">Tokpee</a>, 
-            <a href="https://goleki.id" target="_blank">Goleki</a>, atau 
-            <a href="https://kayadata.id" target="_blank">Kayadata</a> untuk melihat angka terbaru. Versi gratis cukup untuk cek 5–10 toko per hari.
+            <i class="fa fa-info-circle"></i> Gunakan alat riset seperti <a href="https://fastmoss.com/id" target="_blank" style="color:var(--utama); font-weight:600;">FastMoss</a> (TikTok Shop), <a href="https://tokpee.co" target="_blank" style="color:var(--utama); font-weight:600;">Tokpee</a>, atau <a href="https://goleki.id" target="_blank" style="color:var(--utama); font-weight:600;">Goleki</a> untuk estimasi omset. Versi gratis cukup untuk cek harian.
         </div>
-
         <div class="baris">
             <div class="grup flex2">
                 <label>🔍 Cari Nama/Link Toko Kompetitor</label>
-                <input type="text" id="cari-toko" placeholder="Contoh: Toko Baju Bagus atau link Shopee/Tokopedia">
+                <input type="text" id="cari-toko" placeholder="Nama toko atau link Shopee/Tokopedia/TikTok">
             </div>
             <div class="grup">
                 <label style="visibility:hidden;">Aksi</label>
@@ -205,16 +258,15 @@
                 <select id="plat-kompetitor">
                     <option value="Shopee">Shopee</option>
                     <option value="Tokopedia">Tokopedia</option>
-                    <option value="TikTok">TikTok Shop</option>
+                    <option value="TikTok">TikTok Shop (FastMoss)</option>
                     <option value="Lazada">Lazada</option>
                     <option value="Lainnya">Lainnya</option>
                 </select>
             </div>
-            <div class="grup"><label>Estimasi Omset Kompetitor (Rp)</label><input type="number" id="omset-komp" min="0" placeholder="Salin angka dari alat riset di sini"></div>
+            <div class="grup"><label>Estimasi Omset Kompetitor (Rp)</label><input type="number" id="omset-komp" min="0" placeholder="Salin angka dari alat riset"></div>
         </div>
         <button class="btn btn-utama" onclick="simpanKompetitor()"><i class="fa fa-plus-circle"></i> Tambah & Bandingkan</button>
     </div>
-
     <div class="form-boks">
         <h3><i class="fa fa-balance-scale"></i> Hasil Perbandingan Otomatis</h3>
         <div id="daftar-kompetitor" class="daftar-kompetitor">
@@ -257,14 +309,14 @@ function bukaPencarian(){
     const kata = document.getElementById('cari-toko').value.trim();
     if(!kata) {alert('Masukkan nama atau link toko dulu ya!'); return;}
     let link;
-    if(kata.includes('shopee.co.id') || kata.includes('shopee')) {
-        link = `https://shopee.co.id/search?keyword=${encodeURIComponent(kata.replace('https://shopee.co.id/','').replace('/',' '))}`;
-    } else if(kata.includes('tokopedia.com') || kata.includes('tokopedia')) {
-        link = `https://www.tokopedia.com/search?q=${encodeURIComponent(kata.replace('https://www.tokopedia.com/','').replace('/',' '))}`;
-    } else if(kata.includes('tiktok.com') || kata.includes('tiktok shop')) {
-        link = `https://www.tiktok.com/shop/search?keyword=${encodeURIComponent(kata)}`;
+    if(kata.includes('fastmoss') || kata.includes('tiktok shop')) {
+        link = `https://www.fastmoss.com/id/search?keyword=${encodeURIComponent(kata)}`;
+    } else if(kata.includes('shopee')) {
+        link = `https://shopee.co.id/search?keyword=${encodeURIComponent(kata.replace('https://shopee.co.id/',''))}`;
+    } else if(kata.includes('tokopedia')) {
+        link = `https://www.tokopedia.com/search?q=${encodeURIComponent(kata.replace('https://www.tokopedia.com/',''))}`;
     } else {
-        link = `https://www.google.com/search?q=estimasi+omset+toko+${encodeURIComponent(kata)}+shopee+atau+tokopedia`;
+        link = `https://www.google.com/search?q=estimasi+omset+toko+${encodeURIComponent(kata)}+fastmoss+tokpee`;
     }
     window.open(link, '_blank');
 }
@@ -279,15 +331,14 @@ function simpanIklan(){
     };
     dataSemua.push(d);
     localStorage.setItem('dataPro', JSON.stringify(dataSemua));
-    alert('✅ Data Iklan Berhasil Tersimpan!');
+    alert('✅ Data Iklan Tersimpan!');
     muatRingkasan();
 }
 
 function simpanKompetitor(){
     const nama = document.getElementById('nama-kompetitor').value.trim();
     const omset = Number(document.getElementById('omset-komp').value)||0;
-    if(!nama || omset<=0) {alert('Lengkapi nama toko dan estimasi omset kompetitor ya!'); return;}
-    
+    if(!nama || omset<=0) {alert('Lengkapi nama dan omset kompetitor ya!'); return;}
     const d = {
         periode:document.getElementById('periode-kompetitor').value,
         nama:nama,
@@ -296,12 +347,74 @@ function simpanKompetitor(){
     };
     dataKompetitor.push(d);
     localStorage.setItem('dataKompetitor', JSON.stringify(dataKompetitor));
-    
     document.getElementById('nama-kompetitor').value = '';
     document.getElementById('omset-komp').value = '';
-    alert('✅ Data Kompetitor Berhasil Ditambahkan!');
+    alert('✅ Data Kompetitor Tersimpan!');
     muatRingkasan();
     muatDaftarKompetitor();
+}
+
+function hitungSetIklan(){
+    const platform = document.getElementById('set-platform').value;
+    const tujuan = document.getElementById('tujuan-iklan').value;
+    const harga = Number(document.getElementById('set-harga').value)||0;
+    const anggaran = Number(document.getElementById('set-anggaran').value)||50000;
+    const kategori = document.getElementById('kategori').value;
+    const targetRoas = Number(document.getElementById('target-roas-set').value)||3;
+
+    if(!platform || !harga) {alert('Pilih platform dan masukkan harga produk terlebih dahulu!'); return;}
+
+    // Data rata-rata pasar Indonesia
+    const dataPasar = {
+        Meta: {cpcMin: 1500, cpcMax: 4500, cpm: 12000, konversi: 2.5},
+        TikTok: {cpcMin: 800, cpcMax: 2500, cpm: 8500, konversi: 3.8},
+        Shopee: {cpcMin: 900, cpcMax: 2800, cpm: 9500, konversi: 4.2},
+        Tokopedia: {cpcMin: 1000, cpcMax: 3200, cpm: 10500, konversi: 3.5}
+    };
+    const {cpcMin, cpcMax, cpm, konversi} = dataPasar[platform];
+    const cpcRata = Math.round((cpcMin + cpcMax)/2);
+    const cpaTarget = Math.round(harga / targetRoas);
+    const estimasiKlik = Math.floor(anggaran / cpcRata);
+    const estimasiPesanan = Math.round(estimasiKlik * (konversi/100));
+    const estimasiOmset = estimasiPesanan * harga;
+
+    // Panduan pengaturan
+    let panduanTujuan, panduanBidding, panduanAudiens, keterangan;
+    if(platform === 'Meta') {
+        panduanTujuan = tujuan==='konversi' ? 'Pilih tujuan "Penjualan" atau "Konversi", arahkan ke keranjang belanja/halaman produk' : tujuan==='trafik' ? 'Pilih tujuan "Lalu Lintas" atau "Kunjungan Toko"' : 'Pilih tujuan "Kesadaran Merek" atau "Jangkauan"';
+        panduanBidding = `Gunakan biaya per hasil otomatis, atau batasi CPC maksimal sekitar Rp ${cpcMax.toLocaleString()}`;
+        panduanAudiens = 'Arahkan ke usia 18–45 tahun, minat sesuai kategori produk, dan mulai dari audiens luas dulu sebelum mempersempit';
+        keterangan = 'Meta sangat cocok untuk produk visual dan membangun minat. Pastikan materi iklan menarik di 3 detik pertama.';
+    } else if(platform === 'TikTok') {
+        panduanTujuan = tujuan==='konversi' ? 'Pilih tujuan "Konversi Toko" atau "Pesanan Langsung"' : tujuan==='trafik' ? 'Pilih tujuan "Kunjungan Toko"' : 'Pilih tujuan "Jangkauan Video"';
+        panduanBidding = `Gunakan strategi "Biaya Terendah" atau batasi CPA maksimal Rp ${cpaTarget.toLocaleString()}`;
+        panduanAudiens = 'Gunakan fitur audiens otomatis TikTok, tambahkan minat yang berkaitan, dan pastikan video terlihat alami';
+        keterangan = 'TikTok lebih cepat menghasilkan konversi jika videonya terasa seperti konten biasa, bukan iklan keras.';
+    } else if(platform === 'Shopee' || platform === 'Tokopedia') {
+        panduanTujuan = tujuan==='konversi' ? 'Pilih tujuan "Peningkatan Pesanan" atau "Iklan Pencarian"' : tujuan==='trafik' ? 'Pilih tujuan "Iklan Penemuan"' : 'Pilih tujuan "Iklan Tampilan Halaman Utama"';
+        panduanBidding = `Untuk iklan kata kunci, tawar harga rata-rata sekitar Rp ${cpcRata.toLocaleString()} per klik`;
+        panduanAudiens = 'Gunakan kata kunci yang sering dicari pembeli, dan arahkan ke orang yang pernah melihat produk serupa';
+        keterangan = 'Iklan marketplace paling efektif jika produk sudah ada ulasan, harga kompetitif, dan promo diskon aktif.';
+    }
+
+    // Tampilkan hasil
+    document.getElementById('hasil-set-iklan').style.display = 'block';
+    document.getElementById('isi-hasil-set').innerHTML = `
+        <div class="sukses-box"><i class="fa fa-check-circle"></i> <strong>Perkiraan Utama:</strong> Dengan anggaran Rp ${anggaran.toLocaleString()}/hari, diperkirakan mendapatkan ${estimasiKlik.toLocaleString()} kunjungan, ${estimasiPesanan} pesanan, dan omset Rp ${estimasiOmset.toLocaleString()}</div>
+        <div class="item-hasil"><span>Rentang CPC yang disarankan</span><span>Rp ${cpcMin.toLocaleString()} – Rp ${cpcMax.toLocaleString()}</span></div>
+        <div class="item-hasil"><span>Target CPA Maksimal</span><span>Rp ${cpaTarget.toLocaleString()}</span></div>
+        <div class="item-hasil"><span>Perkiraan CPM (1.000 tayang)</span><span>Rp ${cpm.toLocaleString()}</span></div>
+        <div class="item-hasil"><span>Target Konversi Harian</span><span>${konversi}%</span></div>
+        <br>
+        <h4 style="color:var(--utama); margin-bottom:8px;"><i class="fa fa-list-ul"></i> PANDUAN PENGATURAN</h4>
+        <div class="keterangan-panduan">
+            <strong>🎯 Tujuan Kampanye:</strong> ${panduanTujuan}<br><br>
+            <strong>💰 Cara Penawaran:</strong> ${panduanBidding}<br><br>
+            <strong>👥 Target Audiens:</strong> ${panduanAudiens}<br><br>
+            <strong>ℹ️ Keterangan Penting:</strong> ${keterangan}
+        </div>
+        <div class="peringatan-box" style="margin-top:12px;"><i class="fa fa-exclamation-triangle"></i> <strong>Saran:</strong> Jalankan kampanye minimal 3–5 hari untuk melihat hasil sebenarnya. Jika ROAS di bawah ${targetRoas}x, kurangi tawaran atau perbaiki materi iklan.</div>
+    `;
 }
 
 function muatRingkasan(){
