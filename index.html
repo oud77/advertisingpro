@@ -42,15 +42,19 @@
         .turun {color: var(--bahaya);}
         .form-boks {background: var(--putih); padding:24px; border-radius: var(--radius); box-shadow: var(--bayangan); margin-bottom:20px;}
         .form-boks h3 {font-size:18px; font-weight:700; margin-bottom:18px; display:flex; align-items:center; gap:8px; color: var(--utama);}
+        .info-box {background:#FFF7E8; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px; line-height:1.5;}
+        .info-box a {color:var(--peringatan); font-weight:600; text-decoration:none;}
         .baris {display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:14px; margin-bottom:14px;}
         .grup {display:flex; flex-direction:column; gap:6px;}
+        .grup.flex2 {flex:2;}
         label {font-size:14px; font-weight:600; color: var(--gelap);}
         input, select {padding:10px 14px; border:1px solid var(--batas); border-radius:10px; font-size:15px; transition:0.2s;}
         input:focus, select:focus {outline:none; border-color: var(--utama); box-shadow: 0 0 0 3px rgba(22,93,255,0.1);}
         .btn {padding:12px 24px; border:none; border-radius:10px; font-weight:600; cursor:pointer; transition:0.2s; font-size:15px;}
-        .btn-utama {background: var(--utama); color:white; width:100%; box-shadow: 0 4px 12px rgba(22,93,255,0.25);}
-        .btn-kuning {background: var(--peringatan); color:white; width:100%; box-shadow: 0 4px 12px rgba(255,125,0,0.25);}
+        .btn-utama {background: var(--utama); color:white; box-shadow: 0 4px 12px rgba(22,93,255,0.25);}
+        .btn-kuning {background: var(--peringatan); color:white; box-shadow: 0 4px 12px rgba(255,125,0,0.25);}
         .btn:hover {transform: translateY(-2px);}
+        .btn-small {padding:10px 16px; width:auto; align-self:end;}
         .hasil-kalkulasi {background: #F7F8FA; border-radius:12px; padding:18px; margin-top:16px; border:1px solid var(--batas);}
         .item-hasil {display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--batas); font-size:14px;}
         .item-hasil:last-child {border:none; font-weight:700; font-size:16px; color: var(--utama);}
@@ -59,13 +63,14 @@
         .merah {color: var(--bahaya);}
         .hijau {color: var(--sukses);}
         .daftar-kompetitor {margin-top:12px;}
-        .item-kompetitor {padding:12px; border-bottom:1px solid var(--batas); display:flex; justify-content:space-between; align-items:center;}
-        .selisih {font-weight:700; padding:4px 8px; border-radius:6px; font-size:12px;}
+        .item-kompetitor {padding:12px; border-bottom:1px solid var(--batas); display:flex; justify-content:space-between; align-items:center; gap:12px;}
+        .selisih {font-weight:700; padding:4px 8px; border-radius:6px; font-size:12px; white-space:nowrap;}
         .selisih.lebih {background:rgba(0,180,42,0.1); color:var(--sukses);}
         .selisih.kurang {background:rgba(245,63,63,0.1); color:var(--bahaya);}
         @media (max-width:768px) {
             body {padding:12px;}
             .header h1 {font-size:22px;}
+            .baris {grid-template-columns:1fr;}
         }
     </style>
 </head>
@@ -171,28 +176,47 @@
 <!-- KOMPETITOR -->
 <div id="tab-kompetitor" class="konten">
     <div class="form-boks">
-        <h3><i class="fa fa-users"></i> Masukkan Data Kompetitor</h3>
+        <h3><i class="fa fa-search"></i> Cari & Masukkan Data Kompetitor</h3>
+        
+        <div class="info-box">
+            <i class="fa fa-info-circle"></i> <strong>Catatan Penting:</strong> Data omset kompetitor adalah estimasi (bukan angka resmi). Gunakan alat riset gratis seperti 
+            <a href="https://tokpee.co" target="_blank">Tokpee</a>, 
+            <a href="https://goleki.id" target="_blank">Goleki</a>, atau 
+            <a href="https://kayadata.id" target="_blank">Kayadata</a> untuk melihat angka terbaru. Versi gratis cukup untuk cek 5–10 toko per hari.
+        </div>
+
+        <div class="baris">
+            <div class="grup flex2">
+                <label>🔍 Cari Nama/Link Toko Kompetitor</label>
+                <input type="text" id="cari-toko" placeholder="Contoh: Toko Baju Bagus atau link Shopee/Tokopedia">
+            </div>
+            <div class="grup">
+                <label style="visibility:hidden;">Aksi</label>
+                <button class="btn btn-kuning btn-small" onclick="bukaPencarian()"><i class="fa fa-external-link"></i> Buka Pencarian</button>
+            </div>
+        </div>
+        <br>
         <div class="baris">
             <div class="grup"><label>Periode Bulan/Tahun</label><input type="month" id="periode-kompetitor"></div>
-            <div class="grup"><label>Nama Toko/Brand Kompetitor</label><input type="text" id="nama-kompetitor" placeholder="Contoh: Toko Aneka"></div>
+            <div class="grup"><label>Nama Toko/Brand Kompetitor</label><input type="text" id="nama-kompetitor" placeholder="Masukkan nama toko"></div>
         </div>
         <div class="baris">
-            <div class="grup"><label>Platform Kompetitor</label>
+            <div class="grup"><label>Platform</label>
                 <select id="plat-kompetitor">
                     <option value="Shopee">Shopee</option>
                     <option value="Tokopedia">Tokopedia</option>
                     <option value="TikTok">TikTok Shop</option>
                     <option value="Lazada">Lazada</option>
-                    <option value="Website">Website Sendiri</option>
+                    <option value="Lainnya">Lainnya</option>
                 </select>
             </div>
-            <div class="grup"><label>Estimasi Omset Kompetitor (Rp)</label><input type="number" id="omset-komp" min="0"></div>
+            <div class="grup"><label>Estimasi Omset Kompetitor (Rp)</label><input type="number" id="omset-komp" min="0" placeholder="Salin angka dari alat riset di sini"></div>
         </div>
-        <button class="btn btn-kuning" onclick="simpanKompetitor()"><i class="fa fa-plus"></i> Tambah Data Kompetitor</button>
+        <button class="btn btn-utama" onclick="simpanKompetitor()"><i class="fa fa-plus-circle"></i> Tambah & Bandingkan</button>
     </div>
 
     <div class="form-boks">
-        <h3><i class="fa fa-balance-scale"></i> Perbandingan dengan Kompetitor</h3>
+        <h3><i class="fa fa-balance-scale"></i> Hasil Perbandingan Otomatis</h3>
         <div id="daftar-kompetitor" class="daftar-kompetitor">
             <p style="text-align:center; color:var(--abu); padding:20px;">Belum ada data kompetitor yang dimasukkan.</p>
         </div>
@@ -229,6 +253,22 @@ function bukaTab(nama){
     if(nama=='kompetitor') muatDaftarKompetitor();
 }
 
+function bukaPencarian(){
+    const kata = document.getElementById('cari-toko').value.trim();
+    if(!kata) {alert('Masukkan nama atau link toko dulu ya!'); return;}
+    let link;
+    if(kata.includes('shopee.co.id') || kata.includes('shopee')) {
+        link = `https://shopee.co.id/search?keyword=${encodeURIComponent(kata.replace('https://shopee.co.id/','').replace('/',' '))}`;
+    } else if(kata.includes('tokopedia.com') || kata.includes('tokopedia')) {
+        link = `https://www.tokopedia.com/search?q=${encodeURIComponent(kata.replace('https://www.tokopedia.com/','').replace('/',' '))}`;
+    } else if(kata.includes('tiktok.com') || kata.includes('tiktok shop')) {
+        link = `https://www.tiktok.com/shop/search?keyword=${encodeURIComponent(kata)}`;
+    } else {
+        link = `https://www.google.com/search?q=estimasi+omset+toko+${encodeURIComponent(kata)}+shopee+atau+tokopedia`;
+    }
+    window.open(link, '_blank');
+}
+
 function simpanIklan(){
     const d = {
         tgl:document.getElementById('tgl').value,
@@ -239,21 +279,27 @@ function simpanIklan(){
     };
     dataSemua.push(d);
     localStorage.setItem('dataPro', JSON.stringify(dataSemua));
-    alert('✅ Data Iklan Tersimpan!');
+    alert('✅ Data Iklan Berhasil Tersimpan!');
     muatRingkasan();
 }
 
 function simpanKompetitor(){
+    const nama = document.getElementById('nama-kompetitor').value.trim();
+    const omset = Number(document.getElementById('omset-komp').value)||0;
+    if(!nama || omset<=0) {alert('Lengkapi nama toko dan estimasi omset kompetitor ya!'); return;}
+    
     const d = {
         periode:document.getElementById('periode-kompetitor').value,
-        nama:document.getElementById('nama-kompetitor').value,
+        nama:nama,
         platform:document.getElementById('plat-kompetitor').value,
-        omset:Number(document.getElementById('omset-komp').value)||0
+        omset:omset
     };
-    if(!d.nama || !d.omset) {alert('Lengkapi nama dan omset kompetitor!'); return;}
     dataKompetitor.push(d);
     localStorage.setItem('dataKompetitor', JSON.stringify(dataKompetitor));
-    alert('✅ Data Kompetitor Tersimpan!');
+    
+    document.getElementById('nama-kompetitor').value = '';
+    document.getElementById('omset-komp').value = '';
+    alert('✅ Data Kompetitor Berhasil Ditambahkan!');
     muatRingkasan();
     muatDaftarKompetitor();
 }
@@ -309,7 +355,7 @@ function muatDaftarKompetitor(){
         return `<div class="item-kompetitor">
             <div>
                 <strong>${d.nama}</strong> <small style="color:var(--abu)">(${d.platform} - ${d.periode})</small><br>
-                <small>Omset: Rp ${d.omset.toLocaleString()}</small>
+                <small>Estimasi Omset: Rp ${d.omset.toLocaleString()}</small>
             </div>
             <span class="selisih ${selisih>=0 ? 'lebih' : 'kurang'}">
                 ${selisih>=0 ? '+' : ''}${persen}% ${selisih>=0 ? 'Di Atas' : 'Di Bawah'}
